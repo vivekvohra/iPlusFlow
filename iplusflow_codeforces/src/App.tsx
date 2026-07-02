@@ -1,9 +1,19 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './App.css'; // You can keep your styling imports
 
 
 // setup UI component
-function SetupUI() {
+function SetupUI({ onSave }) {
+  const [inputValue, setInputValue] = useState("");
+
+  const handleSave = () => {
+    if (inputValue.trim()) {
+      chrome.storage.local.set({ handle: inputValue.trim() }, () => {
+        onSave(inputValue.trim());
+      });
+    }
+  };
+
   return (
     <div id="setup">
       {/* Logo */}
@@ -13,13 +23,19 @@ function SetupUI() {
       <p className="setup-desc">
         Enter your Codeforces handle below so you can bookmark problems and track which ones you’ve solved.
       </p>
-      <input type="text" id="handle" placeholder="Enter Codeforces handle" />
-      <button id="saveHandle">💾 Save Handle</button>
+      <input type="text" id="handle" placeholder="Enter Codeforces handle" value={inputValue} onChange={(e) => setInputValue(e.target.value)} />
+      <button id="saveHandle" onClick={handleSave}>💾 Save Handle</button>
     </div>
   );
 }
 
-function MainUI() {
+function MainUI({ onReset }) {
+
+  const handleReset = () => {
+    chrome.storage.local.remove("handle", () => {
+      onReset("");
+    });
+  };
   return (
     <>
       <div id="mainUI" className="iplus_hidden">
@@ -33,7 +49,7 @@ function MainUI() {
           />
           <h3 id="popupTitle">Bookmarked Problems</h3>
           {/* ⚙️ Change Handle button */}
-          <button id="resetHandle" title="Change Codeforces handle">⚙️</button>
+          <button id="resetHandle" title="Change Codeforces handle" onClick={handleReset}>⚙️</button>
         </div>
 
         {/* NEW: filter + sync grouped together */}
@@ -100,12 +116,20 @@ function MainUI() {
 
 
 export default function App() {
-  // We declare our state here at the top
+
   const [handle, setHandle] = useState("");
+
+  useEffect(() => {
+    chrome.storage.local.get("handle", (data) => {
+      if (data.handle && typeof data.handle === "string") {
+        setHandle(data.handle);
+      }
+    });
+  }, []);
 
   return (
     <div id="popupRoot">
-      {handle ? <MainUI /> : <SetupUI />}
+      {handle ? <MainUI onReset={setHandle} /> : <SetupUI onSave={setHandle} />}
     </div>
   );
 }
