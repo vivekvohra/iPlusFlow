@@ -26,6 +26,14 @@
   "content_scripts": [
     {
       "matches": [
+        "https://codeforces.com/*"
+      ],
+      "js": [
+        "src/workspace_widget.tsx"
+      ]
+    },
+    {
+      "matches": [
         "https://codeforces.com/contest/*/problem/*",
         "https://codeforces.com/problemset/problem/*",
         "https://codeforces.com/gym/*/problem/*",
@@ -38,6 +46,18 @@
       "js": [
         "prettify.js",
         "src/content.tsx"
+      ]
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "icons/icon128.png",
+        "icons/icon48.png",
+        "icons/icon16.png"
+      ],
+      "matches": [
+        "https://codeforces.com/*"
       ]
     }
   ]

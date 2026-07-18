@@ -1,0 +1,86 @@
+/* Floating Workspace Styles */
+
+#iplus-root {
+  /* Set parent container to fixed so it holds the relative workspace components */
+  position: fixed;
+  right: 20px;
+  width: 50px;
+  height: 50px;
+  z-index: 99999;
+  user-select: none;
+}
+
+.iplus-btn {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  outline: none;
+  cursor: grab;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.06);
+  transition: transform 0.2s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.2s ease, background 0.3s ease;
+  padding: 0;
+}
+
+.iplus-btn:active {
+  cursor: grabbing;
+  transform: scale(0.95);
+}
+
+.iplus-btn-open {
+  background: linear-gradient(135deg, #fee2e2 0%, #fca5a5 100%) !important;
+  border: 1px solid #f87171 !important;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25) !important;
+}
+
+.iplus-btn-closed {
+  background: #ffffff;
+}
+
+.iplus-btn:hover {
+  transform: scale(1.08);
+}
+
+.iplus-btn-closed:hover {
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.08);
+}
+
+.iplus-logo-img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+/* Floating Workspace Modal Panel */
+.iplus-workspace-panel {
+  position: fixed;
+  right: 80px;
+  width: 360px;
+  height: 550px;
+  background-color: #ffffff;
+  border-radius: 16px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.16), 0 2px 8px rgba(0, 0, 0, 0.08);
+  z-index: 99999;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  animation: iplus-slide-up 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Animations */
+@keyframes iplus-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(15px) scale(0.97);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}

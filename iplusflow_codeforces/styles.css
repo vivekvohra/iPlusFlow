@@ -1,9 +1,16 @@
 /* Removed: global body — scope to popup only */
 #popupRoot {
-  font-family: Arial, sans-serif;
-  padding: 10px;
-  min-width: 330px;   /* increased from 300px */
+  font-family: Verdana, sans-serif !important;
+  font-size: 13px !important;
+  padding: 12px;
+  min-width: 330px;
   min-height: 250px;
+  background-color: #ffffff;
+  color: #333333;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
 }
 
 /* Removed: global table styles — scope to popup */
@@ -11,6 +18,8 @@
   width: 100%;
   border-collapse: collapse;
   margin-top: 10px;
+  background-color: #ffffff;
+  font-family: Verdana, sans-serif !important;
 }
 
 #mainUI table.highlight {
@@ -21,14 +30,32 @@
 
 /* Removed: global thead */
 #mainUI thead {
-  background-color: #e9f1ff;
+  background-color: #e9f1ff !important;
 }
 
 /* Removed: global th, td */
-#mainUI th, #mainUI td {
+#mainUI th,
+#mainUI td {
   padding: 6px;
   text-align: left;
   border: 1px solid #ccc;
+  font-size: 13px !important;
+  font-family: Verdana, sans-serif !important;
+  font-weight: normal !important;
+  color: #333333;
+  background-color: #ffffff;
+}
+
+#mainUI a {
+  color: #0000cc !important;
+  text-decoration: none;
+  font-family: Verdana, sans-serif !important;
+  font-size: 13px !important;
+  font-weight: normal !important;
+}
+
+#mainUI a:hover {
+  text-decoration: underline !important;
 }
 
 
@@ -39,7 +66,7 @@
 }
 
 #mainUI tr.solved-row td {
-  font-weight: bold;
+  font-weight: normal !important;
 }
 
 #mainUI td.line pre {
@@ -58,24 +85,42 @@
   gap: 8px;
   margin-bottom: 6px;
 }
-#filter {
-  padding: 6px 8px;
-  font-size: 12px;
-  border-radius: 4px;
-  min-width: 80px;   /* reduced from 140px */
+
+#filter,
+#tagFilter {
+  padding: 5px 8px;
+  font-size: 13px !important;
+  font-family: Verdana, sans-serif !important;
+  border-radius: 3px;
+  border: 1px solid #ccc;
+  color: #333333;
+  background-color: #ffffff;
 }
+
+#filter {
+  min-width: 80px;
+}
+
 #sync {
-  padding: 6px 12px;
-  font-size: 12px;
-  border-radius: 4px;
+  padding: 5px 12px;
+  font-size: 13px !important;
+  font-family: Verdana, sans-serif !important;
+  font-weight: normal !important;
+  border-radius: 3px;
   cursor: pointer;
-  background: #e1ecf4;
-  border: 1px solid #a5c4dc;
+  background: #e1ecf4 !important;
+  border: 1px solid #a5c4dc !important;
+  color: #333333;
+}
+
+#sync:hover {
+  background: #d4e3f0 !important;
 }
 
 /* ensure lastSync sits neatly below */
 #lastSync {
-  font-size: 12px;
+  font-size: 11px !important;
+  font-family: Verdana, sans-serif !important;
   margin: 4px 0 0;
   color: gray;
 }
@@ -90,13 +135,15 @@
 }
 
 #resetHandle {
-  margin-left: auto;        /* push it to the right edge */
+  margin-left: auto;
+  /* push it to the right edge */
   background: transparent;
   border: none;
-  font-size: 18px;
+  font-size: 18px !important;
   cursor: pointer;
   line-height: 1;
 }
+
 #resetHandle:hover {
   color: #0070f3;
 }
@@ -110,25 +157,35 @@
 /* align H3 text, remove its default margins */
 #popupHeader h3 {
   margin: 0;
-  font-size: 1.1rem;
-  font-weight: bold;
-  color: #333;
+  font-size: 18px !important;
+  font-family: Verdana, sans-serif !important;
+  font-weight: normal !important;
+  color: #333333;
 }
 
 
 .edit-notes {
-  padding: 2px 6px;
-  font-size: 14px;
+  padding: 3px 8px;
+  font-size: 12px !important;
+  font-family: Verdana, sans-serif !important;
   cursor: pointer;
-  border: 1px solid #ccc;
-  background-color: #fffbea;
+  border: 1px solid #a5c4dc !important;
+  background-color: #e1ecf4 !important;
+  color: #333333;
   border-radius: 3px;
+}
+
+.edit-notes:hover {
+  background-color: #d4e3f0 !important;
 }
 
 .iplus_modal {
   position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0,0,0,0.5);
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -145,10 +202,12 @@
   border-radius: 10px;
   width: 95%;
   max-width: 800px;
-  max-height: 90vh; /* ✅ caps height */
-  overflow-y: auto;  /* ✅ adds scroll */
+  max-height: 90vh;
+  /* ✅ caps height */
+  overflow-y: auto;
+  /* ✅ adds scroll */
   position: relative;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 
@@ -163,34 +222,43 @@
 .cf-toggle-tags {
   display: inline-block;
   margin-left: 8px;
-  padding: 2px 6px;
-  font-size: 12px;
-  font-weight: 500;
+  padding: 3px 6px;
+  font-size: 12px !important;
+  font-family: Verdana, sans-serif !important;
+  font-weight: normal !important;
   color: #3c3c3c;
   background: #f2f3f5;
   border: 1px solid #dcdfe3;
   border-radius: 2px;
   cursor: pointer;
 }
-.cf-toggle-tags:hover { background: #e5e6e9; }
+
+.cf-toggle-tags:hover {
+  background: #e5e6e9;
+}
 
 .cf-button {
   margin-left: 10px;
-  background: #e1ecf4;
-  border: 1px solid #a5c4dc;
-  padding: 3px 8px;
-  border-radius: 4px;
+  background: #e1ecf4 !important;
+  border: 1px solid #a5c4dc !important;
+  padding: 4px 10px;
+  border-radius: 3px;
   cursor: pointer;
-  font-size: 13px;
+  font-size: 13px !important;
+  font-family: Verdana, sans-serif !important;
+  font-weight: normal !important;
+  color: #333333;
 }
+
 .cf-button.red {
-  background: #f8d7da;
-  border-color: #f5c6cb;
+  background: #f8d7da !important;
+  border-color: #f5c6cb !important;
 }
 
 
 #showFriendsCodes {
-  font-size: 13px;
+  font-size: 13px !important;
+  font-family: Verdana, sans-serif !important;
   color: #0000cc;
   text-decoration: underline;
   cursor: pointer;
@@ -203,9 +271,18 @@
 
 .iplus_close-button {
   position: absolute;
-  top: 10px; right: 15px;
-  font-size: 24px;
+  top: 10px;
+  right: 15px;
+  font-size: 24px !important;
   cursor: pointer;
+}
+
+.iplus_modal-content h3 {
+  margin: 0 0 12px;
+  font-size: 16px !important;
+  font-family: Verdana, sans-serif !important;
+  font-weight: normal !important;
+  color: #333333;
 }
 
 .iplus_modal-footer {
@@ -215,17 +292,53 @@
   gap: 10px;
 }
 
+#saveNoteBtn {
+  padding: 6px 14px;
+  font-size: 13px !important;
+  font-family: Verdana, sans-serif !important;
+  font-weight: normal !important;
+  border-radius: 3px;
+  cursor: pointer;
+  background: #e1ecf4 !important;
+  border: 1px solid #a5c4dc !important;
+  color: #333333;
+}
+
+#saveNoteBtn:hover {
+  background: #d4e3f0 !important;
+}
+
+#cancelNoteBtn {
+  padding: 6px 14px;
+  font-size: 13px !important;
+  font-family: Verdana, sans-serif !important;
+  border-radius: 3px;
+  cursor: pointer;
+  background: #f2f3f5 !important;
+  border: 1px solid #ccc !important;
+  color: #333333;
+}
+
+#cancelNoteBtn:hover {
+  background: #e5e6e9 !important;
+}
+
 #notesText {
   width: 100%;
   padding: 10px;
-  font-size: 14px;
+  font-size: 13px !important;
+  font-family: Verdana, sans-serif !important;
+  color: #333333;
+  border: 1px solid #ccc;
+  border-radius: 3px;
   resize: vertical;
 }
 
 /* Setup‐Screen Styles  */
 #setup {
   text-align: center;
-  padding: 10px;
+  padding: 14px;
+  font-family: Verdana, sans-serif !important;
 }
 
 #setup .setup-logo {
@@ -233,30 +346,47 @@
 }
 
 #setup h2 {
-  margin: 0 0 8px;
-  font-size: 20px;
+  margin: 0 0 10px;
+  font-size: 18px !important;
+  font-family: Verdana, sans-serif !important;
+  font-weight: normal !important;
+  color: #333333;
 }
 
 #setup .setup-desc {
-  margin: 0 0 12px;
-  font-size: 14px;
-  color: #555;
+  margin: 0 0 14px;
+  font-size: 13px !important;
+  font-family: Verdana, sans-serif !important;
+  color: #555555;
+  line-height: 1.4;
 }
 
 #setup input#handle {
-  width: 70%;
-  padding: 6px;
-  font-size: 14px;
-  border-radius: 4px;
+  width: 65%;
+  padding: 6px 8px;
+  font-size: 13px !important;
+  font-family: Verdana, sans-serif !important;
+  border-radius: 3px;
   border: 1px solid #ccc;
+  color: #333333;
+  background-color: #ffffff;
 }
 
 #setup button#saveHandle {
   padding: 6px 12px;
   margin-left: 8px;
-  font-size: 14px;
-  border-radius: 4px;
+  font-size: 13px !important;
+  font-family: Verdana, sans-serif !important;
+  font-weight: normal !important;
+  border-radius: 3px;
   cursor: pointer;
+  background: #e1ecf4 !important;
+  border: 1px solid #a5c4dc !important;
+  color: #333333;
+}
+
+#setup button#saveHandle:hover {
+  background: #d4e3f0 !important;
 }
 
 .roundbox.sidebox {
@@ -268,7 +398,7 @@
 }
 
 .roundbox .caption.titled {
-  font-weight: bold;
+  font-weight: normal !important;
   padding: 5px 10px;
   background-color: #f1f1f1;
   border-bottom: 1px solid #ccc;
@@ -300,21 +430,32 @@
   padding: 0 !important;
 }
 
-.iplus_modal ol.linenums > li {
+.iplus_modal ol.linenums>li {
   background-color: #f8f8f8 !important;
   list-style-type: decimal;
   padding-left: 0.5em;
 }
 
-.iplus_modal ol.linenums > li:nth-child(odd) {
+.iplus_modal ol.linenums>li:nth-child(odd) {
   background-color: #f2f2f2 !important;
 }
 
 /* Ensure syntax colors stand out */
-.iplus_modal pre.prettyprint .kwd { color: #0000ff; }
-.iplus_modal pre.prettyprint .typ { color: #2b91af; }
-.iplus_modal pre.prettyprint .str { color: #a31515; }
-.iplus_modal pre.prettyprint .com { color: #008000; }
+.iplus_modal pre.prettyprint .kwd {
+  color: #0000ff;
+}
+
+.iplus_modal pre.prettyprint .typ {
+  color: #2b91af;
+}
+
+.iplus_modal pre.prettyprint .str {
+  color: #a31515;
+}
+
+.iplus_modal pre.prettyprint .com {
+  color: #008000;
+}
 
 #mainUI th.sortable {
   cursor: pointer;
@@ -331,5 +472,23 @@
   margin-left: 4px;
   font-size: 11px;
   color: #0070f3;
-  font-weight: bold;
+  font-weight: normal !important;
+}
+
+/* Universal rule: ensure zero bold text across all titles, headers, and controls */
+#popupRoot h1,
+#popupRoot h2,
+#popupRoot h3,
+#popupRoot h4,
+#popupRoot h5,
+#popupRoot h6,
+#mainUI th,
+#mainUI td,
+#mainUI button,
+#setup button,
+#controls button,
+.iplus_modal button,
+.sort-indicator,
+.cf-toggle-tags {
+  font-weight: normal !important;
 }
