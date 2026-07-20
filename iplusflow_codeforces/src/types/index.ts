@@ -4,7 +4,7 @@ export interface Problem {
   title: string;
   url: string;
   solved: boolean;
-  rating: number | string;
+  rating: number;
   tags: string[];
   notes?: string;
 }

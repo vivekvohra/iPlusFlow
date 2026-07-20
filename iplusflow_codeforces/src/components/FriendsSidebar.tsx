@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
-import { getFriendsList, getFriendsWhoSolved, type FriendSubmission } from '../utils/friendsCode';
+import { getFriendsWhoSolved, type FriendSubmission } from '../utils/friendsCode';
+import { fetchFriendsList } from '../utils/scraper';
 
 interface FriendsSidebarProps {
     contestId: string;
@@ -29,7 +30,7 @@ export default function FriendsSidebar({ contestId, problemIndex, onFriendClick 
 
                 if (friendsList.length === 0) {
                     // Fallback to scraping /friends if not cached
-                    friendsList = await getFriendsList();
+                    friendsList = await fetchFriendsList();
                     if (friendsList.length > 0) {
                         const capped = friendsList.slice(0, 20);
                         chrome.storage.sync.set({ cf_friends: capped, cf_friends_count: capped.length });

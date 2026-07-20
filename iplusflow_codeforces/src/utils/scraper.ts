@@ -1,14 +1,16 @@
 // utils/scraper.ts
-// Network/scraping utilities that fetch and parse external Codeforces pages.
+// DOM scraping utilities for extracting data from the live Codeforces page.
+
+import { normalizeProblemKey } from './urlHelpers';
 
 /**
  * Fetches the current user's Codeforces friends list by scraping the
  * authenticated /friends page. Filters out the current user's own handle.
  *
- * @param currentHandle - The logged-in user's CF handle to exclude from results.
- * @returns A deduplicated array of friend handles (up to all found).
+ * @param currentHandle - Optional handle to exclude from results.
+ * @returns A deduplicated array of friend handles.
  */
-export async function fetchFriendsList(currentHandle: string): Promise<string[]> {
+export async function fetchFriendsList(currentHandle?: string): Promise<string[]> {
   try {
     const res = await fetch('https://codeforces.com/friends', { credentials: 'include' });
     if (!res.ok || res.url.includes('/enter')) {
@@ -43,8 +45,10 @@ export async function fetchFriendsList(currentHandle: string): Promise<string[]>
   }
 }
 
-
-// src/utils/scraper.ts
+/**
+ * Extracts problem data (title, url, rating, tags) from the current Codeforces DOM.
+ * Clones the title element to strip injected portal buttons before reading text.
+ */
 export const extractProblemData = () => {
   const titleEl = document.querySelector(".problem-statement .title");
   if (!titleEl) return null;
@@ -73,18 +77,17 @@ export const extractProblemData = () => {
   };
 };
 
-// src/utils/scraper.ts
-
-// Extracts "123-A" from the current Codeforces URL
-export const getCurrentProblemKey = () => {
-  const match = location.href.match(/\/contest\/(\d+)\/problem\/([A-Za-z0-9]+)/) ||
-                location.href.match(/\/gym\/(\d+)\/problem\/([A-Za-z0-9]+)/) ||
-                location.href.match(/\/problemset\/problem\/(\d+)\/([A-Za-z0-9]+)/) ||
-                location.href.match(/\/edu\/[^\/]+\/practice\/contest\/(\d+)\/problem\/([A-Za-z0-9]+)/);
-  return match ? `${match[1]}-${match[2]}` : null;
+/**
+ * Extracts "123-A" from the current page URL.
+ * Delegates to the shared normalizeProblemKey utility.
+ */
+export const getCurrentProblemKey = (): string | null => {
+  return normalizeProblemKey(location.href);
 };
 
-// Grabs the username of the logged-in user directly from the Codeforces header
+/**
+ * Grabs the username of the logged-in user directly from the Codeforces header.
+ */
 export const getUsername = () => {
   return document.querySelector('#header a[href^="/profile/"]')?.textContent?.trim() || '';
 };

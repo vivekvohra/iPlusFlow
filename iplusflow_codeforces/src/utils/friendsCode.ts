@@ -43,40 +43,6 @@ export function guessLangClass(lang?: string): string {
 }
 
 /**
- * Scrapes the user's friends list from their /friends page if not already in storage.
- */
-export const getFriendsList = async (): Promise<string[]> => {
-    try {
-        const response = await fetch('https://codeforces.com/friends', { credentials: 'include' });
-        if (!response.ok || response.url.includes('/enter')) {
-            return [];
-        }
-        const html = await response.text();
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(html, 'text/html');
-        
-        const main = doc.querySelector('#pageContent') || doc;
-        let table = main.querySelector('table.datatable');
-        if (!table) {
-            table = Array.from(main.querySelectorAll('table')).find(t =>
-                t.querySelector('tbody a[href^="/profile/"]')
-            ) || null;
-        }
-        if (!table) return [];
-
-        const anchors = table.querySelectorAll('tbody a[href^="/profile/"]');
-        let handles = Array.from(anchors)
-            .map(a => (a.textContent || '').trim())
-            .filter(h => /^[A-Za-z0-9._-]{2,32}$/.test(h));
-
-        return [...new Set(handles)];
-    } catch (error) {
-        console.warn("Failed to fetch friends list:", error);
-        return [];
-    }
-};
-
-/**
  * Orchestrates finding which friends solved the current problem,
  * checking local cache first, then contest.status (fast), then user.status (fallback).
  */
@@ -230,12 +196,4 @@ export const fetchSubmissionCodeDetails = async (
         subUrl,
         langClass: guessLangClass(lang)
     };
-};
-
-/**
- * Backward-compatible helper that returns just the source code string.
- */
-export const fetchSubmissionCode = async (contestId: string, submissionId: number): Promise<string> => {
-    const details = await fetchSubmissionCodeDetails(contestId, submissionId);
-    return details.code;
 };

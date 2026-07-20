@@ -12,12 +12,10 @@ export function filterProblems<T extends Problem>(
     const searchLower = tagFilterText.toLowerCase();
 
     return problems.filter((problem) => {
-        // Tag search filter
         const passTag = !searchLower || (problem.tags || []).some(t => t.toLowerCase().includes(searchLower));
 
-        // Rating / solved filter
         let passDropdown = true;
-        const r = typeof problem.rating === 'number' ? problem.rating : (parseInt(problem.rating as string, 10) || 0);
+        const r = problem.rating || 0;
 
         if (filterOption === "<1200") passDropdown = r < 1200;
         else if (filterOption === "1200-1600") passDropdown = r >= 1200 && r <= 1600;
@@ -43,10 +41,8 @@ export function sortProblems<T extends Problem & { originalIndex: number }>(
 
     sorted.sort((a, b) => {
         if (sortKey === 'rating') {
-            const pa = typeof a.rating === 'number' ? a.rating : (parseInt(a.rating as string, 10) || 0);
-            const pb = typeof b.rating === 'number' ? b.rating : (parseInt(b.rating as string, 10) || 0);
-            if (pa !== pb) {
-                return (pa - pb) * dir;
+            if (a.rating !== b.rating) {
+                return (a.rating - b.rating) * dir;
             }
             return a.originalIndex - b.originalIndex;
         } else {
