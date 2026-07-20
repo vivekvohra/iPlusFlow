@@ -1,19 +1,12 @@
 import React, { useEffect, useState, useRef } from "react";
 import App from "../App";
 import "./FloatingWorkspace.css";
-
-type PositionSlot = "top" | "middle" | "bottom";
+import { getSlotY, type PositionSlot } from "../utils/layout";
 
 export default function FloatingWorkspace() {
   const [isOpen, setIsOpen] = useState(false);
   const [yPos, setYPos] = useState(window.innerHeight - 80);
   const dragStart = useRef<{ x: number; y: number; time: number }>({ x: 0, y: 0, time: 0 });
-
-  const getSlotY = (slot: PositionSlot): number => {
-    if (slot === "top") return 120;
-    if (slot === "middle") return window.innerHeight / 2;
-    return window.innerHeight - 80;
-  };
 
   useEffect(() => {
     // Restore saved snapping slot position and open/closed state

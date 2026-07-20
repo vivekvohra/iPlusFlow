@@ -1,0 +1,195 @@
+/* ProblemWorkspace.css - Migrated styles from Codeforces-Bookmark (Vanilla) */
+
+.problem-workspace-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  font-family: Arial, sans-serif;
+}
+
+.problem-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin-top: 10px;
+  width: 100%;
+}
+
+.problem-actions .cf-button {
+  margin: 0;
+}
+
+/* Added by extension: bookmark and tag toggle buttons */
+.cf-toggle-tags {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 2px 6px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #3c3c3c;
+  background: #f2f3f5;
+  border: 1px solid #dcdfe3;
+  border-radius: 2px;
+  cursor: pointer;
+}
+.cf-toggle-tags:hover {
+  background: #e5e6e9;
+}
+
+.cf-button {
+  margin-left: 10px;
+  background: #e1ecf4;
+  border: 1px solid #a5c4dc;
+  padding: 3px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+}
+.cf-button.red {
+  background: #f8d7da;
+  border-color: #f5c6cb;
+}
+
+/* Solved problem sidebar badge */
+.solved-sidebar-badge {
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+.solved-sidebar-badge span:first-child {
+  margin-right: 4px;
+}
+.solved-sidebar-badge .solved-icon {
+  color: green;
+  font-size: 16px;
+  line-height: 1;
+}
+
+/* Sidebar Box styles */
+.roundbox.sidebox {
+  border: 1px solid #ccc;
+  background: #f8f8f8;
+  padding: 0;
+  margin-top: 1em;
+  font-family: Verdana, sans-serif;
+}
+
+.roundbox .caption.titled {
+  font-weight: bold;
+  padding: 5px 10px;
+  background-color: #f1f1f1;
+  border-bottom: 1px solid #ccc;
+}
+
+.content-list {
+  list-style: disc inside;
+  padding-left: 1.5em;
+  margin: 0.5em 0;
+}
+
+.content-list a {
+  color: #0000ee;
+  text-decoration: underline;
+}
+
+#showFriendsCodes {
+  font-size: 13px;
+  color: #0000cc;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+#showFriendsCodes:hover {
+  color: #800000;
+}
+
+/* Modal styles */
+.iplus_modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.iplus_hidden {
+  display: none;
+}
+
+.iplus_modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 95%;
+  max-width: 800px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.iplus_close-button {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.iplus_modal-footer {
+  margin-top: 10px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.friend-code-block {
+  margin-bottom: 20px;
+}
+
+.code-block-wrapper {
+  position: relative;
+}
+
+/* Override prettify zebra striping to match CF light-gray style */
+.iplus_modal pre.prettyprint,
+.iplus_modal pre.prettyprint.linenums {
+  background-color: #f8f8f8 !important;
+  color: #000 !important;
+  margin: 0;
+  padding: 10px;
+  font-family: Consolas, monospace;
+  font-size: 14px;
+  line-height: 1.4em;
+  border: 1px solid #ccc;
+}
+
+.iplus_modal ol.linenums {
+  background-color: #f0f0f0 !important;
+  margin: 0 0 0 3em !important;
+  padding: 0 !important;
+}
+
+.iplus_modal ol.linenums > li {
+  background-color: #f8f8f8 !important;
+  list-style-type: decimal;
+  padding-left: 0.5em;
+}
+
+.iplus_modal ol.linenums > li:nth-child(odd) {
+  background-color: #f2f2f2 !important;
+}
+
+/* Ensure syntax colors stand out */
+.iplus_modal pre.prettyprint .kwd { color: #0000ff; }
+.iplus_modal pre.prettyprint .typ { color: #2b91af; }
+.iplus_modal pre.prettyprint .str { color: #a31515; }
+.iplus_modal pre.prettyprint .com { color: #008000; }

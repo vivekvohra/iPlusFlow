@@ -1,3 +1,5 @@
+//types/index.ts
+
 export interface Problem {
   title: string;
   url: string;

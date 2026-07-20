@@ -1,38 +1,7 @@
 import { useState } from 'react';
 import type { SetupUIProps } from '../types';
-
-async function fetchFriendsList(currentHandle: string): Promise<string[]> {
-  try {
-    const res = await fetch('https://codeforces.com/friends', { credentials: 'include' });
-    if (!res.ok || res.url.includes('/enter')) {
-      throw new Error('Not logged in or blocked');
-    }
-    const html = await res.text();
-    const doc = new DOMParser().parseFromString(html, 'text/html');
-
-    const main = doc.querySelector('#pageContent') || doc;
-
-    let table = main.querySelector('table.datatable');
-    if (!table) {
-      table = Array.from(main.querySelectorAll('table'))
-        .find(t => t.querySelector('tbody a[href^="/profile/"]')) || null;
-    }
-    if (!table) return [];
-
-    const anchors = table.querySelectorAll('tbody a[href^="/profile/"]');
-    let handles = Array.from(anchors)
-      .map(a => (a.textContent || '').trim())
-      .filter(h => /^[A-Za-z0-9._-]{2,32}$/.test(h));
-
-    handles = [...new Set(handles)];
-    if (currentHandle) handles = handles.filter(h => h !== currentHandle);
-
-    return handles;
-  } catch (e) {
-    console.warn('fetchFriendsList error:', e);
-    return [];
-  }
-}
+import { fetchFriendsList } from '../utils/scraper';
+import { fetchUserInfo } from '../utils/api';
 
 // setup UI component
 export default function SetupUI({ onSave }: SetupUIProps) {
@@ -50,9 +19,8 @@ export default function SetupUI({ onSave }: SetupUIProps) {
     setIsSaving(true);
 
     try {
-      const res = await fetch(`https://codeforces.com/api/user.info?handles=${encodeURIComponent(handle)}`);
-      const data = await res.json();
-      if (data.status !== 'OK') {
+      const info = await fetchUserInfo(handle);
+      if (!info) {
         alert('Handle not found. Please check spelling and try again.');
         return;
       }
