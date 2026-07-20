@@ -61,6 +61,16 @@ export default function SetupUI({ onSave }: SetupUIProps) {
       <button id="saveHandle" onClick={handleSave} disabled={isSaving}>
         {isSaving ? "Saving…" : "💾 Save Handle"}
       </button>
+      <div style={{ marginTop: '16px', textAlign: 'center' }}>
+        <a 
+          href="https://github.com/vivekvohra/iPlusFlow" 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          style={{ fontSize: '12px', color: '#0070f3', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+        >
+          ⭐ View iPlusFlow on GitHub
+        </a>
+      </div>
     </div>
   );
 }

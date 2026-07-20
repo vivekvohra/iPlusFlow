@@ -475,6 +475,28 @@
   font-weight: normal !important;
 }
 
+#popupHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.github-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #555555;
+  padding: 4px;
+  border-radius: 50%;
+  transition: background-color 0.2s, color 0.2s;
+  text-decoration: none !important;
+}
+
+.github-btn:hover {
+  background-color: #f0f0f0;
+  color: #0070f3;
+}
+
 /* Universal rule: ensure zero bold text across all titles, headers, and controls */
 #popupRoot h1,
 #popupRoot h2,
