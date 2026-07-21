@@ -5,6 +5,7 @@ export interface StreakInfo {
     currentStreak: number;
     longestStreak: number;
     lastSolvedDate: string | null;
+    solvedToday?: number;
 }
 
 const STREAK_CACHE_DURATION = 15 * 60 * 1000; // 15 minutes cache
@@ -16,8 +17,12 @@ export function calculateStreak(submissions: any[]): StreakInfo {
     const solvedSubmissions = (submissions || []).filter(sub => sub && sub.verdict === 'OK');
     
     if (solvedSubmissions.length === 0) {
-        return { currentStreak: 0, longestStreak: 0, lastSolvedDate: null };
+        return { currentStreak: 0, longestStreak: 0, lastSolvedDate: null, solvedToday: 0 };
     }
+
+    // Determine problems solved today in local time
+    const today = new Date().toISOString().split('T')[0];
+    const todaySolvedSet = new Set<string>();
 
     // Convert creation timestamps to YYYY-MM-DD dates in local time
     const dateSet = new Set<string>();
@@ -25,16 +30,18 @@ export function calculateStreak(submissions: any[]): StreakInfo {
         if (sub.creationTimeSeconds) {
             const dateStr = new Date(sub.creationTimeSeconds * 1000).toISOString().split('T')[0];
             dateSet.add(dateStr);
+            if (dateStr === today && sub.problem) {
+                const key = `${sub.problem.contestId}-${sub.problem.index}`;
+                todaySolvedSet.add(key);
+            }
         }
     }
 
     const dates = Array.from(dateSet).sort((a, b) => b.localeCompare(a));
     if (dates.length === 0) {
-        return { currentStreak: 0, longestStreak: 0, lastSolvedDate: null };
+        return { currentStreak: 0, longestStreak: 0, lastSolvedDate: null, solvedToday: 0 };
     }
 
-    // Get today and yesterday in YYYY-MM-DD format
-    const today = new Date().toISOString().split('T')[0];
     const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
 
     // Determine current streak
@@ -83,7 +90,8 @@ export function calculateStreak(submissions: any[]): StreakInfo {
     return {
         currentStreak,
         longestStreak: Math.max(currentStreak, longestStreak),
-        lastSolvedDate: dates[0] || null
+        lastSolvedDate: dates[0] || null,
+        solvedToday: todaySolvedSet.size
     };
 }
 

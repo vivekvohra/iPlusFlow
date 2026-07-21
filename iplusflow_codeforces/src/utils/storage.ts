@@ -1,5 +1,5 @@
 // src/utils/storage.ts
-import type { Problem } from '../types';
+import type { Problem, FriendRef } from '../types';
 
 /**
  * Retrieves all bookmarked problems from Chrome Storage.
@@ -88,3 +88,43 @@ export const updateProblemNotes = async (identifier: string, notes: string): Pro
     await saveBookmarks(updated);
     return updated;
 };
+
+/**
+ * Appends a friend solution reference to a bookmarked problem's friendRefs array.
+ * Deduplicates by submissionUrl. If problem is not bookmarked, it must be bookmarked first.
+ */
+export const addFriendRefToBookmark = async (problemUrl: string, ref: FriendRef): Promise<void> => {
+    const bookmarks = await getBookmarks();
+    const updated = bookmarks.map((prob) => {
+        if (prob.url === problemUrl) {
+            const existing = prob.friendRefs || [];
+            // Prevent duplicates by submission URL
+            if (existing.some((r) => r.submissionUrl === ref.submissionUrl)) {
+                return prob;
+            }
+            return { ...prob, friendRefs: [...existing, ref] };
+        }
+        return prob;
+    });
+    await saveBookmarks(updated);
+};
+
+/**
+ * Removes a friend solution reference from a bookmarked problem by submissionUrl.
+ */
+export const removeFriendRefFromBookmark = async (problemUrl: string, submissionUrl: string): Promise<Problem[]> => {
+    const bookmarks = await getBookmarks();
+    const updated = bookmarks.map((prob) => {
+        if (prob.url === problemUrl) {
+            const existing = prob.friendRefs || [];
+            return {
+                ...prob,
+                friendRefs: existing.filter((r) => r.submissionUrl !== submissionUrl)
+            };
+        }
+        return prob;
+    });
+    await saveBookmarks(updated);
+    return updated;
+};
+

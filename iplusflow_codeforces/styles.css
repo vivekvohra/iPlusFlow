@@ -1,15 +1,19 @@
-/* Removed: global body — scope to popup only */
+/* Scoped to extension popup root - Chrome native sharp rectangular popup */
 #popupRoot {
   font-family: Verdana, sans-serif !important;
   font-size: 13px !important;
-  padding: 12px;
-  min-width: 330px;
-  min-height: 250px;
+  padding: 14px;
+  width: 460px !important;
+  min-width: 460px !important;
+  height: 390px !important;
+  min-height: 390px !important;
   background-color: #ffffff;
   color: #333333;
   box-sizing: border-box;
-  width: 100%;
-  height: 100%;
+  border-radius: 0 !important;
+  border: 1px solid #ccc !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12) !important;
+  overflow-x: auto !important;
   overflow-y: auto;
 }
 
@@ -513,4 +517,108 @@
 .sort-indicator,
 .cf-toggle-tags {
   font-weight: normal !important;
+}
+
+/* ==========================================================================
+   CODEFORCES FRIENDS SIDEBOX COMPONENT STYLING
+   ========================================================================== */
+.iplus-friends-roundbox {
+  background: #ffffff !important;
+  border: 1px solid #b9b9b9 !important;
+  border-radius: 6px !important;
+  margin-top: 12px !important;
+  overflow: hidden !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05) !important;
+}
+
+.iplus-friends-roundbox .caption.titled {
+  background: linear-gradient(to bottom, #e0ecf8 0%, #d0e0f0 100%) !important;
+  color: #003399 !important;
+  font-family: Cuprum, Verdana, sans-serif !important;
+  font-size: 13.5px !important;
+  font-weight: bold !important;
+  padding: 5px 10px !important;
+  border-bottom: 1px solid #b9b9b9 !important;
+}
+
+.cf-friend-btn {
+  background: #ffffff !important;
+  border: none !important;
+  width: 100% !important;
+  text-align: left !important;
+  cursor: pointer !important;
+  padding: 7px 10px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  transition: background-color 0.15s ease !important;
+  box-shadow: none !important;
+  outline: none !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
+}
+
+.cf-friend-btn:hover {
+  background-color: #eaf2fc !important;
+}
+
+.cf-friend-btn:hover .cf-view-link {
+  text-decoration: underline !important;
+  color: #0000cc !important;
+}
+
+.cf-friends-footer-btn {
+  width: 100% !important;
+  background: #f4f6f8 !important;
+  border: none !important;
+  border-top: 1px solid #e1e9f0 !important;
+  padding: 6px 10px !important;
+  font-size: 11.5px !important;
+  color: #003399 !important;
+  font-weight: bold !important;
+  cursor: pointer !important;
+  text-align: center !important;
+  transition: background-color 0.15s ease !important;
+}
+
+.cf-friends-footer-btn:hover {
+  background: #e2eaf4 !important;
+  text-decoration: underline !important;
+}
+
+/* ==========================================================================
+   SETUP UI GITHUB BUTTON STYLING
+   ========================================================================== */
+.setup-github-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 6px 14px !important;
+  background-color: #f4f8fc !important;
+  border: 1px solid #b9d3ee !important;
+  border-radius: 20px !important;
+  color: #003399 !important;
+  font-family: Verdana, sans-serif !important;
+  font-size: 12px !important;
+  font-weight: bold !important;
+  text-decoration: none !important;
+  transition: all 0.2s ease !important;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05) !important;
+}
+
+.setup-github-btn:hover {
+  background-color: #e2eaf4 !important;
+  border-color: #3b5998 !important;
+  color: #0000cc !important;
+  box-shadow: 0 2px 5px rgba(0,51,153,0.15) !important;
+}
+
+.github-star-tag {
+  background: #ffffff !important;
+  color: #d97706 !important;
+  border: 1px solid #fcd34d !important;
+  border-radius: 10px !important;
+  padding: 1px 6px !important;
+  font-size: 10.5px !important;
+  margin-left: 6px !important;
 }

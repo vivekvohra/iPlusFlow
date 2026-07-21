@@ -112,7 +112,7 @@ export default function FloatingWorkspace() {
   };
 
   const getPanelStyles = (): React.CSSProperties => {
-    const panelHeight = 550;
+    const panelHeight = 390;
     const padding = 20;
 
     // Adjust panel position vertically relative to the button's Y

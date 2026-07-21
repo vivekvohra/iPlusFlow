@@ -59,12 +59,12 @@
 .iplus-workspace-panel {
   position: fixed;
   right: 80px;
-  width: 360px;
-  height: 550px;
+  width: 460px;
+  height: 390px;
   background-color: #ffffff;
-  border-radius: 16px;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.16), 0 2px 8px rgba(0, 0, 0, 0.08);
+  border-radius: 0;
+  border: 1px solid #ccc;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.14);
   z-index: 99999;
   overflow: hidden;
   display: flex;

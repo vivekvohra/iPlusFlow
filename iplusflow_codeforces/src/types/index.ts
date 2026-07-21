@@ -1,5 +1,11 @@
 //types/index.ts
 
+export interface FriendRef {
+  handle: string;
+  language: string;
+  submissionUrl: string;
+}
+
 export interface Problem {
   title: string;
   url: string;
@@ -7,6 +13,7 @@ export interface Problem {
   rating: number;
   tags: string[];
   notes?: string;
+  friendRefs?: FriendRef[];
 }
 
 export interface SetupUIProps {

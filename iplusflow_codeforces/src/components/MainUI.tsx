@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import type { Problem, MainUIProps } from '../types';
 import { normalizeProblemKey } from '../utils/urlHelpers';
 import { fetchUserStatus } from '../utils/api';
-import { getBookmarks, saveBookmarks, updateProblemNotes } from '../utils/storage';
+import { getBookmarks, saveBookmarks, updateProblemNotes, removeFriendRefFromBookmark } from '../utils/storage';
 import { getUserStreak, type StreakInfo } from '../utils/streak';
 import { filterProblems, sortProblems } from '../utils/filterHelpers';
 import NotesModal from './NotesModal';
@@ -32,6 +32,13 @@ export default function MainUI({ onReset, handle }: MainUIProps) {
   const sortedProblemsToShow = sortProblems(filtered, sortKey, sortOrder);
 
   const handleOpenNote = (problem: Problem) => {
+    // 1. Send signal to open full page-level NotesModal on Codeforces and close FAB panel drawer
+    chrome?.storage?.local?.set({ 
+      widget_is_open: false, 
+      active_page_note: problem 
+    });
+
+    // 2. Also set local state for popup fallback if not on Codeforces page
     setActiveNote(problem);
     setNoteText(problem.notes || "");
   };
@@ -47,6 +54,24 @@ export default function MainUI({ onReset, handle }: MainUIProps) {
     if (handle) {
       getUserStreak(handle).then(setStreakInfo);
     }
+
+    // Reactive Storage Listener: Auto-updates UI instantly when bookmarks, notes, or solved status change anywhere!
+    const handleStorageChange = (changes: { [key: string]: chrome.storage.StorageChange }, areaName: string) => {
+      if (areaName === "sync") {
+        if (changes.bookmarks) {
+          const newBookmarks = (changes.bookmarks.newValue || []) as Problem[];
+          setProblems(newBookmarks);
+        }
+        if (changes.last_sync) {
+          setLastSync(changes.last_sync.newValue as number);
+        }
+      }
+    };
+
+    chrome.storage.onChanged.addListener(handleStorageChange);
+    return () => {
+      chrome.storage.onChanged.removeListener(handleStorageChange);
+    };
   }, [handle]);
 
   const handleReset = () => {
@@ -62,6 +87,14 @@ export default function MainUI({ onReset, handle }: MainUIProps) {
     setActiveNote(null);
   };
 
+  const handleRemoveFriendRef = async (submissionUrl: string) => {
+    if (!activeNote) return;
+    const updated = await removeFriendRefFromBookmark(activeNote.url, submissionUrl);
+    const updatedNote = updated.find((p) => p.url === activeNote.url) || null;
+    setActiveNote(updatedNote);
+    setProblems(updated);
+  };
+
   const handleSync = async () => {
     if (isSyncing) return;
     setIsSyncing(true);
@@ -69,6 +102,10 @@ export default function MainUI({ onReset, handle }: MainUIProps) {
     try {
       if (!handle) throw new Error('No handle saved');
 
+      // 1. Retrieve latest bookmarks directly from storage (prevents operating on stale state)
+      const currentBookmarks = await getBookmarks();
+
+      // 2. Query Codeforces API for user's solved submissions
       const submissions = await fetchUserStatus(handle, 1000);
       const solvedSet = new Set<string>();
       for (const sub of submissions) {
@@ -79,7 +116,8 @@ export default function MainUI({ onReset, handle }: MainUIProps) {
         }
       }
 
-      const updatedProblems = problems.map((prob) => {
+      // 3. Mark solved status on all fresh bookmarks
+      const updatedProblems = currentBookmarks.map((prob) => {
         const key = normalizeProblemKey(prob.url);
         if (!key) return prob;
         return { ...prob, solved: solvedSet.has(key) };
@@ -90,9 +128,9 @@ export default function MainUI({ onReset, handle }: MainUIProps) {
       setLastSync(last_sync);
 
       await saveBookmarks(updatedProblems);
-      chrome.storage.sync.set({ last_sync });
+      await chrome.storage.sync.set({ last_sync });
 
-      // Refresh streak after sync
+      // 4. Refresh streak after sync
       const freshStreak = await getUserStreak(handle);
       setStreakInfo(freshStreak);
 
@@ -190,6 +228,7 @@ export default function MainUI({ onReset, handle }: MainUIProps) {
         setNoteText={setNoteText}
         onSave={handleSaveNote}
         onClose={() => setActiveNote(null)}
+        onRemoveFriendRef={handleRemoveFriendRef}
       />
     </>
   );

@@ -9,13 +9,14 @@ import {
 
 import { extractProblemData, getCurrentProblemKey, getUsername } from "../utils/scraper";
 import { fetchUserStatus } from "../utils/api";
-import { addBookmark, removeBookmarkByUrl, checkUrlBookmarked, markBookmarkSolved, updateProblemNotes } from "../utils/storage";
+import { addBookmark, removeBookmarkByUrl, checkUrlBookmarked, markBookmarkSolved, updateProblemNotes, addFriendRefToBookmark, removeFriendRefFromBookmark } from "../utils/storage";
 import { getUserStreak, type StreakInfo } from "../utils/streak";
-import type { Problem } from "../types";
+import type { Problem, FriendRef } from "../types";
 import FriendsSidebar from "./FriendsSidebar";
+import ProgressSidebar from "./ProgressSidebar";
+import type { FriendSubmission } from "../utils/friendsCode";
 import CodeModal from "./CodeModal";
 import NotesModal from "./NotesModal";
-import StreakBadge from "./StreakBadge";
 
 export default function ProblemWorkspace() {
     const [handle, setHandle] = useState<string | null>(null);
@@ -56,6 +57,13 @@ export default function ProblemWorkspace() {
                 if (isMounted.current) {
                     setHandle(newHandle || null);
                 }
+            }
+            if (areaName === "local" && changes.active_page_note?.newValue) {
+                const noteObj = changes.active_page_note.newValue as Problem;
+                setCurrentProblemObj(noteObj);
+                setNoteText(noteObj.notes || "");
+                setIsNotesOpen(true);
+                chrome.storage.local.remove("active_page_note");
             }
         };
 
@@ -165,6 +173,9 @@ export default function ProblemWorkspace() {
     };
 
     const handleOpenNotesModal = async () => {
+        // Automatically close FAB workspace drawer when opening the ADD NOTE modal
+        chrome?.storage?.local?.set({ widget_is_open: false });
+
         const currentUrl = window.location.href;
         const problemData = extractProblemData();
         const title = problemData?.title || "Current Problem";
@@ -179,8 +190,9 @@ export default function ProblemWorkspace() {
         };
 
         const { bookmarked } = await checkUrlBookmarked(currentUrl);
-        if (bookmarked && bookmarked.notes) {
-            problemObj.notes = bookmarked.notes;
+        if (bookmarked) {
+            if (bookmarked.notes) problemObj.notes = bookmarked.notes;
+            if (bookmarked.friendRefs) problemObj.friendRefs = bookmarked.friendRefs;
         }
 
         setCurrentProblemObj(problemObj);
@@ -205,7 +217,48 @@ export default function ProblemWorkspace() {
         }
 
         setIsNotesOpen(false);
-        alert('Note saved!');
+    };
+
+    const handleSaveFriendToNotes = async (friend: FriendSubmission) => {
+        const currentUrl = window.location.href;
+        const problemData = extractProblemData();
+
+        // Build the structured friend reference
+        const subUrl = `https://codeforces.com/contest/${contestId}/submission/${friend.submissionId}`;
+        const ref: FriendRef = {
+            handle: friend.handle,
+            language: friend.language || 'C++',
+            submissionUrl: subUrl,
+        };
+
+        // Check if already bookmarked
+        const { bookmarked } = await checkUrlBookmarked(currentUrl);
+
+        if (!bookmarked) {
+            // Auto-bookmark the problem first
+            if (problemData) {
+                const newProblem: Problem = {
+                    title: problemData.title,
+                    url: currentUrl,
+                    solved: isSolved,
+                    rating: problemData.rating || 0,
+                    tags: problemData.tags || [],
+                    notes: "",
+                    friendRefs: [ref]
+                };
+                await addBookmark(newProblem);
+                return;
+            }
+        } else {
+            await addFriendRefToBookmark(currentUrl, ref);
+        }
+    };
+
+    const handleRemoveFriendRef = async (submissionUrl: string) => {
+        if (!currentProblemObj) return;
+        const updated = await removeFriendRefFromBookmark(currentProblemObj.url, submissionUrl);
+        const updatedObj = updated.find((p) => p.url === currentProblemObj.url) || null;
+        setCurrentProblemObj(updatedObj);
     };
 
     // If still checking handle or user has no saved handle, render NOTHING on the Codeforces page
@@ -235,24 +288,14 @@ export default function ProblemWorkspace() {
                     containers.tagsToggle
                 )}
 
-            {/* 3. Streak Badge in Sidebar */}
-            {containers.streakBadge &&
+            {/* 3. Progress Sidebar Card (top of #sidebar) */}
+            {containers.progressSidebar &&
                 createPortal(
-                    <StreakBadge 
-                        currentStreak={streakInfo.currentStreak} 
-                        longestStreak={streakInfo.longestStreak} 
+                    <ProgressSidebar 
+                        isSolved={isSolved}
+                        streakInfo={streakInfo}
                     />,
-                    containers.streakBadge
-                )}
-
-            {/* 4. Solved Problem Sidebar Badge */}
-            {containers.solvedBadge && isSolved &&
-                createPortal(
-                    <div className="solved-sidebar-badge">
-                        <span>Solved</span>
-                        <span className="solved-icon">✔</span>
-                    </div>,
-                    containers.solvedBadge
+                    containers.progressSidebar
                 )}
 
             {/* 5. Friends' Accepted Codes Sidebar Box */}
@@ -262,6 +305,7 @@ export default function ProblemWorkspace() {
                         contestId={contestId}
                         problemIndex={problemIndex}
                         onFriendClick={(id, handle, language) => setActiveSubmission({ id, handle, language })}
+                        onSaveToNotes={handleSaveFriendToNotes}
                     />,
                     containers.friendsSidebox
                 )}
@@ -293,7 +337,6 @@ export default function ProblemWorkspace() {
                     />,
                     containers.modalRoot
                 )}
-
             {containers.modalRoot && isNotesOpen && currentProblemObj &&
                 createPortal(
                     <NotesModal
@@ -302,6 +345,7 @@ export default function ProblemWorkspace() {
                         setNoteText={setNoteText}
                         onSave={handleSaveNote}
                         onClose={() => setIsNotesOpen(false)}
+                        onRemoveFriendRef={handleRemoveFriendRef}
                     />,
                     containers.modalRoot
                 )}
