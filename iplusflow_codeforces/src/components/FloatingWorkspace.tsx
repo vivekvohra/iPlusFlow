@@ -112,18 +112,18 @@ export default function FloatingWorkspace() {
   };
 
   const getPanelStyles = (): React.CSSProperties => {
-    const panelHeight = 390;
+    const maxPanelHeight = Math.min(window.innerHeight * 0.8, 600);
     const padding = 20;
 
     // Adjust panel position vertically relative to the button's Y
-    let top = yPos - panelHeight / 2;
+    let top = yPos - maxPanelHeight / 2;
 
     // Boundary constraints to keep the workspace panel entirely on screen
     if (top < padding) {
       top = padding;
     }
-    if (top + panelHeight > window.innerHeight - padding) {
-      top = window.innerHeight - panelHeight - padding;
+    if (top + maxPanelHeight > window.innerHeight - padding) {
+      top = window.innerHeight - maxPanelHeight - padding;
     }
 
     return {

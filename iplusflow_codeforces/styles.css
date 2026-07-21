@@ -2,26 +2,16 @@
 #popupRoot {
   font-family: Verdana, sans-serif !important;
   font-size: 11px !important;
-  padding: 10px 12px;
-  width: 450px !important;
-  min-width: 450px !important;
-  max-width: 450px !important;
-  height: auto !important;
-  max-height: 580px !important;
+  padding: 10px;
+  min-width: 330px;
   background-color: #ffffff;
   color: #333333;
   box-sizing: border-box;
-  border-radius: 0 !important;
-  border: 1px solid #ccc !important;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12) !important;
-  overflow-x: hidden !important;
-  overflow-y: auto !important;
 }
 
 /* Removed: global table styles — scope to popup */
 #mainUI table {
   width: 100%;
-  table-layout: fixed;
   border-collapse: collapse;
   margin-top: 8px;
   background-color: #ffffff;
@@ -49,7 +39,6 @@
   font-family: Verdana, sans-serif !important;
   font-weight: normal !important;
   color: #333333;
-  background-color: #ffffff;
 }
 
 #mainUI a {
@@ -100,6 +89,11 @@
 
 #filter {
   min-width: 75px;
+}
+
+#tagFilter {
+  flex: 1;
+  min-width: 100px;
 }
 
 #sync {
