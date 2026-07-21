@@ -38,7 +38,29 @@ export default function MainUI({ onReset, handle }: MainUIProps) {
       active_page_note: problem 
     });
 
-    // 2. Also set local state for popup fallback if not on Codeforces page
+    // 2. If running inside Codeforces page directly (e.g. content script in FAB drawer)
+    if (typeof window !== 'undefined' && window.location?.href?.includes('codeforces.com')) {
+      // FAB drawer automatically closes via storage listener; do not open local modal inside closing drawer
+      return;
+    }
+
+    // 3. If running inside Chrome Extension action popup
+    if (typeof chrome !== 'undefined' && chrome?.tabs?.query) {
+      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        const activeTab = tabs[0];
+        if (activeTab?.url && activeTab.url.includes('codeforces.com')) {
+          // On Codeforces page: close the Extension Popup window so only the page-level NotesModal is shown!
+          window.close();
+        } else {
+          // Not on Codeforces: show NotesModal inside extension popup window as fallback
+          setActiveNote(problem);
+          setNoteText(problem.notes || "");
+        }
+      });
+      return;
+    }
+
+    // 4. Fallback for non-extension environments (e.g. simulator)
     setActiveNote(problem);
     setNoteText(problem.notes || "");
   };
@@ -130,8 +152,8 @@ export default function MainUI({ onReset, handle }: MainUIProps) {
       await saveBookmarks(updatedProblems);
       await chrome.storage.sync.set({ last_sync });
 
-      // 4. Refresh streak after sync
-      const freshStreak = await getUserStreak(handle);
+      // 4. Refresh streak after sync with forceRefresh = true
+      const freshStreak = await getUserStreak(handle, true);
       setStreakInfo(freshStreak);
 
     } catch (e) {

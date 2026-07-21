@@ -10,7 +10,7 @@ import {
 import { extractProblemData, getCurrentProblemKey, getUsername } from "../utils/scraper";
 import { fetchUserStatus } from "../utils/api";
 import { addBookmark, removeBookmarkByUrl, checkUrlBookmarked, markBookmarkSolved, updateProblemNotes, addFriendRefToBookmark, removeFriendRefFromBookmark } from "../utils/storage";
-import { getUserStreak, type StreakInfo } from "../utils/streak";
+import { getUserStreak, calculateStreak, type StreakInfo } from "../utils/streak";
 import type { Problem, FriendRef } from "../types";
 import FriendsSidebar from "./FriendsSidebar";
 import ProgressSidebar from "./ProgressSidebar";
@@ -108,33 +108,40 @@ export default function ProblemWorkspace() {
         const checkSolvedStatus = async () => {
             const problemKey = getCurrentProblemKey();
             const username = getUsername() || handle;
-            if (!problemKey || !username) return;
+            if (!username) return;
 
-            const [contestId, problemIndex] = problemKey.split('-');
             const currentUrl = window.location.href;
 
-            // Check Chrome Storage first
+            // Check Chrome Storage first for solved status
             const { bookmarked, isSolved: cachedSolved } = await checkUrlBookmarked(currentUrl);
-            if (cachedSolved) {
-                if (isMounted.current) setIsSolved(true);
-                return;
+            if (cachedSolved && isMounted.current) {
+                setIsSolved(true);
             }
 
-            // If not cached as solved, query Codeforces API
+            // Always fetch submissions to ensure solved status and streak count are 100% up-to-date!
             try {
                 const submissions = await fetchUserStatus(username, 1000);
                 if (submissions && submissions.length > 0) {
-                    const hasSolved = submissions.some((sub: any) => 
-                        sub.verdict === 'OK' &&
-                        String(sub.problem.contestId) === contestId &&
-                        sub.problem.index === problemIndex
-                    );
+                    if (problemKey) {
+                        const [contestId, problemIndex] = problemKey.split('-');
+                        const hasSolved = submissions.some((sub: any) => 
+                            sub.verdict === 'OK' &&
+                            String(sub.problem?.contestId) === contestId &&
+                            sub.problem?.index === problemIndex
+                        );
 
-                    if (hasSolved) {
-                        if (isMounted.current) setIsSolved(true);
-                        if (bookmarked) {
-                            await markBookmarkSolved(currentUrl);
+                        if (hasSolved) {
+                            if (isMounted.current) setIsSolved(true);
+                            if (bookmarked) {
+                                await markBookmarkSolved(currentUrl);
+                            }
                         }
+                    }
+
+                    // Recalculate streak directly from fresh submission history!
+                    const freshStreak = calculateStreak(submissions);
+                    if (isMounted.current) {
+                        setStreakInfo(freshStreak);
                     }
                 }
             } catch (e) {

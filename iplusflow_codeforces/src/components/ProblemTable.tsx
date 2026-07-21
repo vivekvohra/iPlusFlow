@@ -17,49 +17,49 @@ export default function ProblemTable({
   onOpenNote,
 }: ProblemTableProps) {
   return (
-    <table id="table">
+    <table id="table" style={{ width: '100%', tableLayout: 'fixed', borderCollapse: 'collapse' }}>
       <thead>
         <tr>
-          <th>Solved</th>
-          <th id="th-title" className="sortable" onClick={() => onSort("title")}>
+          <th style={{ width: '40px', textAlign: 'center' }}>Solved</th>
+          <th id="th-title" className="sortable" style={{ width: '115px' }} onClick={() => onSort("title")}>
             Problem Title
             <span className="sort-indicator">
               {sortKey === "title" && (sortOrder === "asc" ? "▲" : "▼")}
             </span>
           </th>
-          <th id="th-rating" className="sortable" onClick={() => onSort("rating")}>
+          <th id="th-rating" className="sortable" style={{ width: '48px' }} onClick={() => onSort("rating")}>
             Rating
             <span className="sort-indicator">
               {sortKey === "rating" && (sortOrder === "asc" ? "▲" : "▼")}
             </span>
           </th>
-          <th>Tags</th>
-          <th>Notes</th>
+          <th style={{ width: '175px' }}>Tags</th>
+          <th style={{ width: '48px', textAlign: 'center' }}>Notes</th>
         </tr>
       </thead>
       <tbody id="list">
         {problems.map((problem, index) => (
           <tr key={index} className={problem.solved ? "solved-row" : ""}>
             {/* 1. Solved Status */}
-            <td>
+            <td style={{ textAlign: 'center' }}>
               <input type="checkbox" checked={!!problem.solved} disabled />
             </td>
 
             {/* 2. Problem Title */}
-            <td>
+            <td style={{ wordBreak: 'break-word' }}>
               <a href={problem.url} target="_blank" rel="noopener noreferrer">
                 {problem.title || problem.url || 'Problem'}
               </a>
             </td>
 
             {/* 3. Rating */}
-            <td>{problem.rating}</td>
+            <td>{problem.rating || ''}</td>
 
             {/* 4. Tags */}
-            <td>{(problem.tags || []).join(", ")}</td>
+            <td style={{ wordBreak: 'break-word' }}>{(problem.tags || []).join(", ")}</td>
 
             {/* 5. Notes Button */}
-            <td>
+            <td style={{ textAlign: 'center' }}>
               <button className="edit-notes" title="Edit Notes" onClick={() => onOpenNote(problem)}>
                 Edit
               </button>
