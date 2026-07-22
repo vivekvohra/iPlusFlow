@@ -33,13 +33,6 @@ export default function CodeModal({
                 setSubUrl(details.subUrl);
                 setLangClass(details.langClass);
                 setIsLoading(false);
-
-                // Trigger Google Prettify syntax highlighting just like vanilla extension
-                setTimeout(() => {
-                    if ((window as any).PR && typeof (window as any).PR.prettyPrint === 'function') {
-                        try { (window as any).PR.prettyPrint(); } catch (e) {}
-                    }
-                }, 0);
             }
         };
 
@@ -49,6 +42,18 @@ export default function CodeModal({
             isMounted.current = false;
         };
     }, [contestId, submissionId, language]);
+
+    useEffect(() => {
+        if (!isLoading && code && isMounted.current) {
+            // Give React time to commit the <pre className="prettyprint ..."> element to the DOM
+            const timer = setTimeout(() => {
+                if ((window as any).PR && typeof (window as any).PR.prettyPrint === 'function') {
+                    try { (window as any).PR.prettyPrint(); } catch (e) {}
+                }
+            }, 30);
+            return () => clearTimeout(timer);
+        }
+    }, [isLoading, code]);
 
     return (
         <div className="iplus_modal">

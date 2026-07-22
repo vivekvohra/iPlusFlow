@@ -27,12 +27,9 @@
   pre .dec { color: #98fb98 } /* decimal         - lightgreen */
 
   /* Specify class=linenums on a pre to get line numbering */
-  ol.linenums { margin-top: 0; margin-bottom: 0; color: #AEAEAE } /* IE indents via margin-left */
-  li.L0,li.L1,li.L2,li.L3,li.L5,li.L6,li.L7,li.L8 { list-style-type: none }
-  /* Alternate shading for lines */
-li.L1, li.L3, li.L5, li.L7, li.L9 {
-  background-color: #2d2d2d; /* or any soft shade that matches your dark theme */
-}
+  .iplus_modal ol.linenums { margin-top: 0; margin-bottom: 0; color: #AEAEAE } /* IE indents via margin-left */
+  .iplus_modal ol.linenums > li.L0,.iplus_modal ol.linenums > li.L1,.iplus_modal ol.linenums > li.L2,.iplus_modal ol.linenums > li.L3,.iplus_modal ol.linenums > li.L5,.iplus_modal ol.linenums > li.L6,.iplus_modal ol.linenums > li.L7,.iplus_modal ol.linenums > li.L8 { list-style-type: none }
+  /* Shading for lines inside iplus_modal is handled by styles.css (#f8f8f8 / #f2f2f2) */
 
   @media print {
     pre.prettyprint { background-color: none }
