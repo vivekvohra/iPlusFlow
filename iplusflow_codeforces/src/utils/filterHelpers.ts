@@ -7,12 +7,21 @@ import type { Problem } from '../types';
 export function filterProblems<T extends Problem>(
     problems: T[],
     tagFilterText: string,
-    filterOption: string
+    filterOption: string,
+    selectedTags: string[] = []
 ): T[] {
-    const searchLower = tagFilterText.toLowerCase();
+    const searchLower = tagFilterText.trim().toLowerCase();
 
     return problems.filter((problem) => {
-        const passTag = !searchLower || (problem.tags || []).some(t => t.toLowerCase().includes(searchLower));
+        const problemTags = (problem.tags || []).map(t => t.toLowerCase());
+
+        // Every tag pill added must be present in the problem's tags (substring match)
+        const passSelectedTags = selectedTags.every(chip => 
+            problemTags.some(t => t.includes(chip.toLowerCase()))
+        );
+
+        // Any text currently being typed in the search box must also match
+        const passText = !searchLower || problemTags.some(t => t.includes(searchLower));
 
         let passDropdown = true;
         const r = Number(problem.rating) || 0;
@@ -22,7 +31,7 @@ export function filterProblems<T extends Problem>(
         else if (filterOption === ">1600") passDropdown = r > 1600;
         else if (filterOption === "unsolved") passDropdown = !problem.solved;
 
-        return passTag && passDropdown;
+        return passSelectedTags && passText && passDropdown;
     });
 }
 

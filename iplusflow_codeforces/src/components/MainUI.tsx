@@ -20,6 +20,7 @@ export default function MainUI({ onReset, handle }: MainUIProps) {
 
   const [filterOption, setFilterOption] = useState("All");
   const [tagFilterText, setTagFilterText] = useState("");
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
   const [sortKey, setSortKey] = useState<"title" | "rating" | null>(null);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
@@ -28,8 +29,40 @@ export default function MainUI({ onReset, handle }: MainUIProps) {
   const problemsWithIndex = problems.map((prob, i) => ({ ...prob, originalIndex: i }));
 
   // Use extracted filter and sort helper utilities
-  const filtered = filterProblems(problemsWithIndex, tagFilterText, filterOption);
+  const filtered = filterProblems(problemsWithIndex, tagFilterText, filterOption, selectedTags);
   const sortedProblemsToShow = sortProblems(filtered, sortKey, sortOrder);
+
+  const handleAddTagChip = (tagInput: string) => {
+    const cleaned = tagInput.trim();
+    if (!cleaned) return;
+    if (!selectedTags.some(t => t.toLowerCase() === cleaned.toLowerCase())) {
+      setSelectedTags(prev => [...prev, cleaned]);
+    }
+    setTagFilterText("");
+  };
+
+  const handleTagInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    if (val.includes(",")) {
+      const parts = val.split(",");
+      parts.slice(0, -1).forEach(part => {
+        const cleaned = part.trim();
+        if (cleaned && !selectedTags.some(t => t.toLowerCase() === cleaned.toLowerCase())) {
+          setSelectedTags(prev => [...prev, cleaned]);
+        }
+      });
+      setTagFilterText(parts[parts.length - 1].trimStart());
+    } else {
+      setTagFilterText(val);
+    }
+  };
+
+  const handleTagInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && tagFilterText.trim()) {
+      e.preventDefault();
+      handleAddTagChip(tagFilterText);
+    }
+  };
 
   const handleOpenNote = (problem: Problem) => {
     // 1. Send signal to open full page-level NotesModal on Codeforces and close FAB panel drawer
@@ -220,14 +253,41 @@ export default function MainUI({ onReset, handle }: MainUIProps) {
           <input
             type="text"
             id="tagFilter"
-            placeholder="Filter by tag…"
+            placeholder="Filter by tag (Enter/comma)…"
             value={tagFilterText}
-            onChange={(e) => setTagFilterText(e.target.value)}
+            onChange={handleTagInputChange}
+            onKeyDown={handleTagInputKeyDown}
           />
           <button id="sync" onClick={handleSync} disabled={isSyncing}>
             {isSyncing ? "Syncing…" : "🔄 Sync"}
           </button>
         </div>
+
+        {selectedTags.length > 0 && (
+          <div className="filter-chips-container">
+            {selectedTags.map((tag, idx) => (
+              <span key={idx} className="filter-chip">
+                {tag}
+                <button
+                  type="button"
+                  className="filter-chip-remove"
+                  title={`Remove ${tag} filter`}
+                  onClick={() => setSelectedTags(selectedTags.filter((_, i) => i !== idx))}
+                >
+                  ×
+                </button>
+              </span>
+            ))}
+            <button
+              type="button"
+              className="filter-chips-clear"
+              onClick={() => setSelectedTags([])}
+              title="Clear all tag filters"
+            >
+              Clear all
+            </button>
+          </div>
+        )}
 
         <p id="lastSync">
           {lastSync ? `Last sync: ${new Date(lastSync).toLocaleString()}` : ''}

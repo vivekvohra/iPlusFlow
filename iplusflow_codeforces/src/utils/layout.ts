@@ -14,7 +14,7 @@ export type PositionSlot = 'top' | 'middle' | 'bottom';
  * @returns The Y coordinate in pixels.
  */
 export function getSlotY(slot: PositionSlot): number {
-  if (slot === 'top') return 120;
+  if (slot === 'top') return 60;
   if (slot === 'middle') return window.innerHeight / 2;
-  return window.innerHeight - 80;
+  return window.innerHeight - 35;
 }

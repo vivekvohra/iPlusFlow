@@ -5,7 +5,7 @@ import { getSlotY, type PositionSlot } from "../utils/layout";
 
 export default function FloatingWorkspace() {
   const [isOpen, setIsOpen] = useState(false);
-  const [yPos, setYPos] = useState(window.innerHeight - 80);
+  const [yPos, setYPos] = useState(window.innerHeight - 35);
   const dragStart = useRef<{ x: number; y: number; time: number }>({ x: 0, y: 0, time: 0 });
 
   useEffect(() => {
@@ -56,8 +56,8 @@ export default function FloatingWorkspace() {
   }, []);
 
   const handleMouseMove = (e: MouseEvent) => {
-    // Constrain Y position within safe boundaries of screen height
-    const constrainedY = Math.max(50, Math.min(e.clientY, window.innerHeight - 50));
+    // Constrain Y position within safe boundaries of screen height (10px margin around 50px button)
+    const constrainedY = Math.max(35, Math.min(e.clientY, window.innerHeight - 35));
     setYPos(constrainedY);
   };
 
@@ -112,23 +112,30 @@ export default function FloatingWorkspace() {
   };
 
   const getPanelStyles = (): React.CSSProperties => {
-    const maxPanelHeight = Math.min(window.innerHeight * 0.8, 600);
-    const padding = 20;
-
-    // Adjust panel position vertically relative to the button's Y
-    let top = yPos - maxPanelHeight / 2;
-
-    // Boundary constraints to keep the workspace panel entirely on screen
-    if (top < padding) {
-      top = padding;
+    if (yPos > window.innerHeight * 0.65) {
+      // FAB is at or near the bottom -> anchor the bottom of the popup near the bottom of the FAB
+      const bottomDistance = Math.max(10, window.innerHeight - (yPos + 25));
+      return {
+        bottom: `${bottomDistance}px`,
+        top: 'auto',
+        transform: 'none'
+      };
+    } else if (yPos < window.innerHeight * 0.35) {
+      // FAB is at or near the top -> anchor the top of the popup near the top of the FAB
+      const topDistance = Math.max(10, yPos - 25);
+      return {
+        top: `${topDistance}px`,
+        bottom: 'auto',
+        transform: 'none'
+      };
+    } else {
+      // FAB is in the middle -> vertically center the popup aligned with the FAB
+      return {
+        top: `${yPos}px`,
+        bottom: 'auto',
+        transform: 'translateY(-50%)'
+      };
     }
-    if (top + maxPanelHeight > window.innerHeight - padding) {
-      top = window.innerHeight - maxPanelHeight - padding;
-    }
-
-    return {
-      top: `${top}px`
-    };
   };
 
   const logoUrl = chrome.runtime.getURL("icons/icon128.png");

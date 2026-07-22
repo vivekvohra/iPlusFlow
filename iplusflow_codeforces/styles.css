@@ -112,6 +112,62 @@
   background: #d4e3f0 !important;
 }
 
+/* Multiple Tag Filter Chips */
+.filter-chips-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-top: 2px;
+  margin-bottom: 6px;
+}
+
+.filter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  background-color: #eaf2fc;
+  border: 1px solid #b9d3ee;
+  border-radius: 14px;
+  font-size: 11px !important;
+  font-family: Verdana, sans-serif !important;
+  color: #003399;
+}
+
+.filter-chip-remove {
+  background: none !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  font-size: 13px !important;
+  font-weight: bold !important;
+  color: #003399 !important;
+  cursor: pointer !important;
+  line-height: 1 !important;
+  display: inline-flex;
+  align-items: center;
+}
+
+.filter-chip-remove:hover {
+  color: #cc0000 !important;
+}
+
+.filter-chips-clear {
+  background: none !important;
+  border: none !important;
+  padding: 2px 4px !important;
+  font-size: 11px !important;
+  font-family: Verdana, sans-serif !important;
+  color: #666666 !important;
+  text-decoration: underline !important;
+  cursor: pointer !important;
+}
+
+.filter-chips-clear:hover {
+  color: #cc0000 !important;
+}
+
 /* ensure lastSync sits neatly below */
 #lastSync {
   font-size: 10.5px !important;

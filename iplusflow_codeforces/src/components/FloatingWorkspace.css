@@ -72,18 +72,16 @@
   overflow-x: hidden;
   display: flex;
   flex-direction: column;
-  animation: iplus-slide-up 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: iplus-fade-in 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 /* Animations */
-@keyframes iplus-slide-up {
+@keyframes iplus-fade-in {
   from {
     opacity: 0;
-    transform: translateY(15px) scale(0.97);
   }
 
   to {
     opacity: 1;
-    transform: translateY(0) scale(1);
   }
 }
