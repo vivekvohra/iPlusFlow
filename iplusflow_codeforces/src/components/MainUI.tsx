@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
-import type { Problem, MainUIProps } from '../types';
+import type { Problem, MainUIProps, StreakInfo } from '../types';
 import { normalizeProblemKey } from '../utils/urlHelpers';
 import { fetchUserStatus } from '../utils/api';
 import { getBookmarks, saveBookmarks, updateProblemNotes, removeFriendRefFromBookmark } from '../utils/storage';
-import { getUserStreak, type StreakInfo } from '../utils/streak';
+import { getUserStreak } from '../utils/streak';
 import { filterProblems, sortProblems } from '../utils/filterHelpers';
+import { useCodeforcesSync } from '../hooks/useCodeforcesSync';
 import NotesModal from './NotesModal';
 import StreakBadge from './StreakBadge';
 import ProblemTable from './ProblemTable';
@@ -14,9 +15,9 @@ export default function MainUI({ onReset, handle }: MainUIProps) {
   const [problems, setProblems] = useState<Problem[]>([]);
   const [activeNote, setActiveNote] = useState<Problem | null>(null);
   const [noteText, setNoteText] = useState("");
-  const [isSyncing, setIsSyncing] = useState(false);
-  const [lastSync, setLastSync] = useState<number | null>(null);
   const [streakInfo, setStreakInfo] = useState<StreakInfo>({ currentStreak: 0, longestStreak: 0, lastSolvedDate: null });
+
+  const { isSyncing, lastSync, setLastSync, handleSync } = useCodeforcesSync(handle, setProblems, setStreakInfo);
 
   const [filterOption, setFilterOption] = useState("All");
   const [tagFilterText, setTagFilterText] = useState("");
@@ -148,53 +149,6 @@ export default function MainUI({ onReset, handle }: MainUIProps) {
     const updatedNote = updated.find((p) => p.url === activeNote.url) || null;
     setActiveNote(updatedNote);
     setProblems(updated);
-  };
-
-  const handleSync = async () => {
-    if (isSyncing) return;
-    setIsSyncing(true);
-
-    try {
-      if (!handle) throw new Error('No handle saved');
-
-      // 1. Retrieve latest bookmarks directly from storage (prevents operating on stale state)
-      const currentBookmarks = await getBookmarks();
-
-      // 2. Query Codeforces API for user's solved submissions
-      const submissions = await fetchUserStatus(handle, 1000);
-      const solvedSet = new Set<string>();
-      for (const sub of submissions) {
-        if (sub.verdict === 'OK' && sub.problem) {
-          const cid = sub.problem.contestId;
-          const idx = sub.problem.index;
-          if (cid && idx) solvedSet.add(`${cid}-${idx}`);
-        }
-      }
-
-      // 3. Mark solved status on all fresh bookmarks
-      const updatedProblems = currentBookmarks.map((prob) => {
-        const key = normalizeProblemKey(prob.url);
-        if (!key) return prob;
-        return { ...prob, solved: solvedSet.has(key) };
-      });
-
-      const last_sync = Date.now();
-      setProblems(updatedProblems);
-      setLastSync(last_sync);
-
-      await saveBookmarks(updatedProblems);
-      await chrome.storage.sync.set({ last_sync });
-
-      // 4. Refresh streak after sync with forceRefresh = true
-      const freshStreak = await getUserStreak(handle, true);
-      setStreakInfo(freshStreak);
-
-    } catch (e) {
-      console.warn('Sync failed:', e);
-      alert('Failed to sync solved problems.');
-    } finally {
-      setIsSyncing(false);
-    }
   };
 
   const handleSort = (clickedKey: "title" | "rating") => {

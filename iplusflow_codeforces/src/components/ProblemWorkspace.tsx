@@ -7,14 +7,12 @@ import {
   type InjectionContainers,
 } from "../utils/domHelpers";
 
-import { extractProblemData, getCurrentProblemKey, getUsername } from "../utils/scraper";
-import { fetchUserStatus } from "../utils/api";
-import { addBookmark, removeBookmarkByUrl, checkUrlBookmarked, markBookmarkSolved, updateProblemNotes, addFriendRefToBookmark, removeFriendRefFromBookmark } from "../utils/storage";
-import { getUserStreak, calculateStreak, type StreakInfo } from "../utils/streak";
-import type { Problem, FriendRef } from "../types";
+import { extractProblemData, getCurrentProblemKey } from "../utils/scraper";
+import { addBookmark, removeBookmarkByUrl, checkUrlBookmarked, updateProblemNotes, addFriendRefToBookmark, removeFriendRefFromBookmark } from "../utils/storage";
+import type { Problem, FriendRef, FriendSubmission } from "../types";
+import { useSolvedStatus } from "../hooks/useSolvedStatus";
 import FriendsSidebar from "./FriendsSidebar";
 import ProgressSidebar from "./ProgressSidebar";
-import type { FriendSubmission } from "../utils/friendsCode";
 import CodeModal from "./CodeModal";
 import NotesModal from "./NotesModal";
 
@@ -22,7 +20,7 @@ export default function ProblemWorkspace() {
     const [handle, setHandle] = useState<string | null>(null);
     const [isCheckingHandle, setIsCheckingHandle] = useState(true);
     const [containers, setContainers] = useState<InjectionContainers>({});
-    const [isSolved, setIsSolved] = useState(false);
+    const { isSolved, streakInfo } = useSolvedStatus(handle);
     const [showTags, setShowTags] = useState(false);
     const isMounted = useRef(true);
 
@@ -32,9 +30,6 @@ export default function ProblemWorkspace() {
     const [isNotesOpen, setIsNotesOpen] = useState(false);
     const [noteText, setNoteText] = useState("");
     const [currentProblemObj, setCurrentProblemObj] = useState<Problem | null>(null);
-
-    // Streak State
-    const [streakInfo, setStreakInfo] = useState<StreakInfo>({ currentStreak: 0, longestStreak: 0, lastSolvedDate: null });
 
     // Extract contestId and problemIndex for the Sidebar props
     const problemKey = getCurrentProblemKey();
@@ -57,13 +52,6 @@ export default function ProblemWorkspace() {
                 if (isMounted.current) {
                     setHandle(newHandle || null);
                 }
-            }
-            if (areaName === "local" && changes.active_page_note?.newValue) {
-                const noteObj = changes.active_page_note.newValue as Problem;
-                setCurrentProblemObj(noteObj);
-                setNoteText(noteObj.notes || "");
-                setIsNotesOpen(true);
-                chrome.storage.local.remove("active_page_note");
             }
         };
 
@@ -93,63 +81,6 @@ export default function ProblemWorkspace() {
         return () => {
             removeCodeforcesContainers(newContainers);
         };
-    }, [handle]);
-
-    // 3. Check solved status & fetch streak ONLY if user is logged in
-    useEffect(() => {
-        if (!handle) return;
-
-        getUserStreak(handle).then((info) => {
-            if (isMounted.current) {
-                setStreakInfo(info);
-            }
-        });
-
-        const checkSolvedStatus = async () => {
-            const problemKey = getCurrentProblemKey();
-            const username = getUsername() || handle;
-            if (!username) return;
-
-            const currentUrl = window.location.href;
-
-            // Check Chrome Storage first for solved status
-            const { bookmarked, isSolved: cachedSolved } = await checkUrlBookmarked(currentUrl);
-            if (cachedSolved && isMounted.current) {
-                setIsSolved(true);
-            }
-
-            // Always fetch submissions to ensure solved status and streak count are 100% up-to-date!
-            try {
-                const submissions = await fetchUserStatus(username, 1000);
-                if (submissions && submissions.length > 0) {
-                    if (problemKey) {
-                        const [contestId, problemIndex] = problemKey.split('-');
-                        const hasSolved = submissions.some((sub: any) => 
-                            sub.verdict === 'OK' &&
-                            String(sub.problem?.contestId) === contestId &&
-                            sub.problem?.index === problemIndex
-                        );
-
-                        if (hasSolved) {
-                            if (isMounted.current) setIsSolved(true);
-                            if (bookmarked) {
-                                await markBookmarkSolved(currentUrl);
-                            }
-                        }
-                    }
-
-                    // Recalculate streak directly from fresh submission history!
-                    const freshStreak = calculateStreak(submissions);
-                    if (isMounted.current) {
-                        setStreakInfo(freshStreak);
-                    }
-                }
-            } catch (e) {
-                console.warn('API fetch error:', e);
-            }
-        };
-
-        checkSolvedStatus();
     }, [handle]);
 
     // 4. Sync tag visibility with the Codeforces DOM ONLY if logged in

@@ -1,72 +1,11 @@
-import { useEffect, useState, useRef } from 'react';
-import { getFriendsWhoSolved, type FriendSubmission } from '../utils/friendsCode';
-import { fetchFriendsList } from '../utils/scraper';
-
-interface FriendsSidebarProps {
-    contestId: string;
-    problemIndex: string;
-    onFriendClick: (submissionId: number, handle: string, language?: string) => void;
-    onSaveToNotes?: (friend: FriendSubmission) => void;
-}
+import { useState } from 'react';
+import type { FriendsSidebarProps, FriendSubmission } from '../types';
+import { useFriendsData } from '../hooks/useFriendsData';
 
 export default function FriendsSidebar({ contestId, problemIndex, onFriendClick, onSaveToNotes }: FriendsSidebarProps) {
-    const [friends, setFriends] = useState<FriendSubmission[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+    const { friends, isLoading, error } = useFriendsData(contestId, problemIndex);
     const [isExpanded, setIsExpanded] = useState(false);
     const [savedFriends, setSavedFriends] = useState<Set<number>>(new Set());
-    
-    // Prevents state updates if the user navigates away before API calls finish
-    const isMounted = useRef(true);
-
-    useEffect(() => {
-        const fetchFriendsData = async () => {
-            try {
-                setIsLoading(true);
-                
-                // 1. Check Chrome Storage sync for cached friends list first
-                const stored = await new Promise<{ cf_friends?: string[] }>((resolve) => {
-                    chrome.storage.sync.get({ cf_friends: [] }, resolve);
-                });
-                
-                let friendsList = stored.cf_friends || [];
-
-                if (friendsList.length === 0) {
-                    // Fallback to scraping /friends if not cached
-                    friendsList = await fetchFriendsList();
-                    if (friendsList.length > 0) {
-                        const capped = friendsList.slice(0, 20);
-                        chrome.storage.sync.set({ cf_friends: capped, cf_friends_count: capped.length });
-                        friendsList = capped;
-                    }
-                }
-                
-                if (friendsList.length === 0) {
-                    if (isMounted.current) setIsLoading(false);
-                    return; 
-                }
-
-                // 2. Query the API (with local cache check) to see who solved it
-                const solvedFriends = await getFriendsWhoSolved(contestId, problemIndex, friendsList);
-                
-                if (isMounted.current) {
-                    setFriends(solvedFriends);
-                    setIsLoading(false);
-                }
-            } catch (err) {
-                if (isMounted.current) {
-                    setError('Failed to load friends data.');
-                    setIsLoading(false);
-                }
-            }
-        };
-
-        fetchFriendsData();
-
-        return () => {
-            isMounted.current = false;
-        };
-    }, [contestId, problemIndex]);
 
     const handleSave = (friend: FriendSubmission) => {
         if (savedFriends.has(friend.submissionId)) return;

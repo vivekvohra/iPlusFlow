@@ -1,14 +1,6 @@
 // src/components/NotesModal.tsx
-import type { Problem } from '../types';
-
-interface NotesModalProps {
-  activeNote: Problem | null;
-  noteText: string;
-  setNoteText: (text: string) => void;
-  onSave: () => void;
-  onClose: () => void;
-  onRemoveFriendRef?: (submissionUrl: string) => void;
-}
+import type { NotesModalProps } from '../types';
+import './ProblemWorkspace.css';
 
 export default function NotesModal({
   activeNote,
@@ -119,9 +111,6 @@ export default function NotesModal({
         <div className="iplus_modal-footer">
           <button id="saveNoteBtn" onClick={onSave}>
             Save
-          </button>
-          <button id="cancelNoteBtn" onClick={onClose}>
-            Cancel
           </button>
         </div>
       </div>

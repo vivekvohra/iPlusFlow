@@ -1,12 +1,9 @@
 // src/utils/streak.ts
 import { fetchUserStatus } from './api';
+import type { StreakInfo } from '../types';
 
-export interface StreakInfo {
-    currentStreak: number;
-    longestStreak: number;
-    lastSolvedDate: string | null;
-    solvedToday?: number;
-}
+// Re-export for backward compatibility
+export type { StreakInfo };
 
 const STREAK_CACHE_DURATION = 15 * 60 * 1000; // 15 minutes cache
 

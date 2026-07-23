@@ -1,12 +1,10 @@
 // src/utils/friendsCode.ts
+import type { FriendSubmission } from '../types';
 
-export interface FriendSubmission {
-    handle: string;
-    submissionId: number;
-    language: string;
-}
+// Re-export for backward compatibility
+export type { FriendSubmission };
 
-const MAX_FRIENDS = 10;
+const MAX_FRIENDS = 20;
 const CACHE_DURATION = 10 * 60 * 1000; // 10 minutes
 
 let lastApiCallTime = 0;
@@ -171,10 +169,10 @@ export const fetchSubmissionCodeDetails = async (
             const html = await subRes.text();
             const parser = new DOMParser();
             const doc = parser.parseFromString(html, 'text/html');
-            const pre = doc.querySelector('#program-source-text, pre.program-source');
+            const pre = doc.querySelector('#program-source-text, pre.program-source, pre.prettyprint, .source-code pre, #pageContent pre');
 
             if (pre && pre.textContent) {
-                code = pre.textContent;
+                code = pre.textContent.trimEnd();
                 const canonical =
                     (doc.querySelector('link[rel="canonical"][href*="/submission/"]') as HTMLLinkElement)?.href ||
                     (doc.querySelector('meta[property="og:url"][content*="/submission/"]') as HTMLMetaElement)?.content;

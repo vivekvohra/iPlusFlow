@@ -50,12 +50,12 @@ export async function fetchFriendsList(currentHandle?: string): Promise<string[]
  * Clones the title element to strip injected portal buttons before reading text.
  */
 export const extractProblemData = () => {
-  const titleEl = document.querySelector(".problem-statement .title");
+  const titleEl = document.querySelector(".problem-statement .title, .problem-title, #problem-statement .title, h1.title");
   if (!titleEl) return null;
 
-  // Clone node and strip out injected action buttons to get clean problem title
+  // Clone node and strip out injected action buttons, scripts, or styles to get clean problem title text
   const clone = titleEl.cloneNode(true) as HTMLElement;
-  clone.querySelectorAll('.problem-actions, button').forEach(el => el.remove());
+  clone.querySelectorAll('.problem-actions, button, script, style, svg').forEach(el => el.remove());
   const title = clone.textContent?.trim() || '';
 
   if (!title) return null;

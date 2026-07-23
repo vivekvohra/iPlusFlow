@@ -1,9 +1,4 @@
-import type { StreakInfo } from '../utils/streak';
-
-interface ProgressSidebarProps {
-    isSolved: boolean;
-    streakInfo: StreakInfo;
-}
+import type { ProgressSidebarProps } from '../types';
 
 export default function ProgressSidebar({ isSolved, streakInfo }: ProgressSidebarProps) {
     const solvedTodayCount = streakInfo.solvedToday ?? (streakInfo.currentStreak > 0 ? 1 : 0);

@@ -1,13 +1,6 @@
 // src/components/StreakBadge.tsx
-import React from 'react';
 import './StreakBadge.css';
-
-interface StreakBadgeProps {
-    currentStreak: number;
-    longestStreak?: number;
-    className?: string;
-    style?: React.CSSProperties;
-}
+import type { StreakBadgeProps } from '../types';
 
 export default function StreakBadge({ currentStreak, longestStreak, className, style }: StreakBadgeProps) {
     const label = `${currentStreak} ${currentStreak === 1 ? 'Day' : 'Days'}`;

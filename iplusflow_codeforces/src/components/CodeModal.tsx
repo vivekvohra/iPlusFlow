@@ -1,13 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { fetchSubmissionCodeDetails } from "../utils/friendsCode";
-
-interface CodeModalProps {
-    contestId: string;
-    submissionId: number;
-    handle: string;
-    language?: string;
-    onClose: () => void;
-}
+import type { CodeModalProps } from "../types";
 
 export default function CodeModal({
     contestId,

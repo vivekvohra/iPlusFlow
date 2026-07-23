@@ -7,12 +7,14 @@ import { fetchUserInfo } from '../utils/api';
 export default function SetupUI({ onSave }: SetupUIProps) {
   const [inputValue, setInputValue] = useState("");
   const [isSaving, setIsSaving] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleSave = async () => {
     const handle = inputValue.trim();
+    setErrorMessage("");
 
-    if (!/^[A-Za-z0-9._-]{2,32}$/.test(handle)) {
-      alert('Please enter a valid Codeforces handle.');
+    if (!/^[A-Za-z0-9._-]{3,24}$/.test(handle)) {
+      setErrorMessage("Please enter a valid Codeforces handle (3–24 alphanumeric characters, dot, or dash).");
       return;
     }
 
@@ -21,7 +23,7 @@ export default function SetupUI({ onSave }: SetupUIProps) {
     try {
       const info = await fetchUserInfo(handle);
       if (!info) {
-        alert('Handle not found. Please check spelling and try again.');
+        setErrorMessage("Handle not found on Codeforces. Please check spelling and try again.");
         return;
       }
 
@@ -42,9 +44,16 @@ export default function SetupUI({ onSave }: SetupUIProps) {
       onSave(handle);
     } catch (e) {
       console.error(e);
-      alert('Network error. Please try again.');
+      setErrorMessage("Network error connecting to Codeforces API. Please check internet connection.");
     } finally {
       setIsSaving(false);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleSave();
     }
   };
 
@@ -57,7 +66,20 @@ export default function SetupUI({ onSave }: SetupUIProps) {
       <p className="setup-desc">
         Enter your Codeforces handle below so you can bookmark problems and track which ones you’ve solved.
       </p>
-      <input type="text" id="handle" placeholder="Enter Codeforces handle" value={inputValue} onChange={(e) => setInputValue(e.target.value)} disabled={isSaving} />
+      {errorMessage && (
+        <div style={{ color: '#d9534f', backgroundColor: '#fdf2f2', border: '1px solid #f8d7da', padding: '6px 10px', borderRadius: '4px', fontSize: '11.5px', marginBottom: '10px' }}>
+          ⚠️ {errorMessage}
+        </div>
+      )}
+      <input
+        type="text"
+        id="handle"
+        placeholder="Enter Codeforces handle"
+        value={inputValue}
+        onChange={(e) => { setInputValue(e.target.value); setErrorMessage(""); }}
+        onKeyDown={handleKeyDown}
+        disabled={isSaving}
+      />
       <button id="saveHandle" onClick={handleSave} disabled={isSaving}>
         {isSaving ? "Saving…" : "💾 Save Handle"}
       </button>

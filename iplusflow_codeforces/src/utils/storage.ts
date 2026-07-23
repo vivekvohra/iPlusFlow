@@ -115,7 +115,7 @@ export const addFriendRefToBookmark = async (problemUrl: string, ref: FriendRef)
 export const removeFriendRefFromBookmark = async (problemUrl: string, submissionUrl: string): Promise<Problem[]> => {
     const bookmarks = await getBookmarks();
     const updated = bookmarks.map((prob) => {
-        if (prob.url === problemUrl) {
+        if (prob.url === problemUrl || prob.title === problemUrl) {
             const existing = prob.friendRefs || [];
             return {
                 ...prob,

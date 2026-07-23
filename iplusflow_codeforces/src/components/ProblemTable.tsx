@@ -1,13 +1,5 @@
 // src/components/ProblemTable.tsx
-import type { Problem } from '../types';
-
-interface ProblemTableProps {
-  problems: (Problem & { originalIndex: number })[];
-  sortKey: "title" | "rating" | null;
-  sortOrder: "asc" | "desc";
-  onSort: (key: "title" | "rating") => void;
-  onOpenNote: (problem: Problem) => void;
-}
+import type { ProblemTableProps } from '../types';
 
 export default function ProblemTable({
   problems,

@@ -7,10 +7,11 @@ import { fetchFriendsList } from './utils/scraper';
 
 export default function App() {
   const [handle, setHandle] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    chrome.storage.sync.get(["cf_handle", "cf_friends"], async (data) => {
-      if (data.cf_handle && typeof data.cf_handle === "string") {
+    chrome?.storage?.sync?.get(["cf_handle", "cf_friends"], async (data) => {
+      if (data?.cf_handle && typeof data.cf_handle === "string") {
         setHandle(data.cf_handle);
         if (!data.cf_friends || !Array.isArray(data.cf_friends) || data.cf_friends.length === 0) {
           try {
@@ -25,8 +26,17 @@ export default function App() {
           }
         }
       }
+      setIsLoading(false);
     });
   }, []);
+
+  if (isLoading) {
+    return (
+      <div id="popupRoot" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '160px', fontFamily: 'Verdana, sans-serif' }}>
+        <span style={{ fontSize: '13px', color: '#666' }}>⏳ Loading iPlusFlow…</span>
+      </div>
+    );
+  }
 
   return (
     <div id="popupRoot">

@@ -1,12 +1,43 @@
 import React, { useEffect, useState, useRef } from "react";
+import { createPortal } from "react-dom";
 import App from "../App";
 import "./FloatingWorkspace.css";
 import { getSlotY, type PositionSlot } from "../utils/layout";
+import NotesModal from "./NotesModal";
+import type { Problem } from "../types";
+import { updateProblemNotes, removeFriendRefFromBookmark } from "../utils/storage";
 
 export default function FloatingWorkspace() {
   const [isOpen, setIsOpen] = useState(false);
   const [yPos, setYPos] = useState(window.innerHeight - 35);
+  const [activePageNote, setActivePageNote] = useState<Problem | null>(null);
+  const [pageNoteText, setPageNoteText] = useState("");
   const dragStart = useRef<{ x: number; y: number; time: number }>({ x: 0, y: 0, time: 0 });
+  const containerRef = useRef<HTMLDivElement>(null);
+  const rafRef = useRef<number | null>(null);
+  const currentYRef = useRef<number>(window.innerHeight - 35);
+
+  const handleSavePageNote = async () => {
+    if (!activePageNote) return;
+    const identifier = activePageNote.url || activePageNote.title;
+    await updateProblemNotes(identifier, pageNoteText);
+    setActivePageNote(null);
+  };
+
+  const handleRemoveFriendRef = async (submissionUrl: string) => {
+    if (!activePageNote) return;
+    const identifier = activePageNote.url || activePageNote.title;
+    const updated = await removeFriendRefFromBookmark(identifier, submissionUrl);
+    const updatedNote = updated.find((p) => p.url === identifier || p.title === identifier) || null;
+    setActivePageNote(updatedNote);
+  };
+
+  useEffect(() => {
+    currentYRef.current = yPos;
+    if (containerRef.current) {
+      containerRef.current.style.top = `${yPos - 25}px`;
+    }
+  }, [yPos]);
 
   useEffect(() => {
     // Restore saved snapping slot position and open/closed state
@@ -41,6 +72,13 @@ export default function FloatingWorkspace() {
           const slot = (changes.widget_y_slot.newValue as PositionSlot) || "bottom";
           setYPos(getSlotY(slot));
         }
+        if (changes.active_page_note?.newValue) {
+          const noteObj = changes.active_page_note.newValue as Problem;
+          setActivePageNote(noteObj);
+          setPageNoteText(noteObj.notes || "");
+          setIsOpen(false);
+          chrome?.storage?.local?.remove("active_page_note");
+        }
       }
     };
 
@@ -58,12 +96,25 @@ export default function FloatingWorkspace() {
   const handleMouseMove = (e: MouseEvent) => {
     // Constrain Y position within safe boundaries of screen height (10px margin around 50px button)
     const constrainedY = Math.max(35, Math.min(e.clientY, window.innerHeight - 35));
-    setYPos(constrainedY);
+    currentYRef.current = constrainedY;
+
+    if (rafRef.current) {
+      cancelAnimationFrame(rafRef.current);
+    }
+    rafRef.current = requestAnimationFrame(() => {
+      if (containerRef.current) {
+        containerRef.current.style.top = `${currentYRef.current - 25}px`;
+      }
+    });
   };
 
   const handleMouseUp = (e: MouseEvent) => {
     document.removeEventListener("mousemove", handleMouseMove);
     document.removeEventListener("mouseup", handleMouseUp);
+
+    if (rafRef.current) {
+      cancelAnimationFrame(rafRef.current);
+    }
 
     const deltaX = Math.abs(e.clientX - dragStart.current.x);
     const deltaY = Math.abs(e.clientY - dragStart.current.y);
@@ -100,7 +151,7 @@ export default function FloatingWorkspace() {
     }
 
     setYPos(finalY);
-    chrome.storage.local.set({ widget_y_slot: selectedSlot });
+    chrome?.storage?.local?.set({ widget_y_slot: selectedSlot });
   };
 
   const handleMouseDown = (e: React.MouseEvent) => {
@@ -144,6 +195,7 @@ export default function FloatingWorkspace() {
     <>
       {/* Floating Button Container */}
       <div
+        ref={containerRef}
         style={{
           position: "fixed",
           top: `${yPos - 25}px`, // Centering vertically on the Y coordinate
@@ -175,6 +227,20 @@ export default function FloatingWorkspace() {
           </div>
         )}
       </div>
+
+      {/* Page-level Notes Modal accessible from ANY Codeforces page */}
+      {activePageNote &&
+        createPortal(
+          <NotesModal
+            activeNote={activePageNote}
+            noteText={pageNoteText}
+            setNoteText={setPageNoteText}
+            onSave={handleSavePageNote}
+            onClose={() => setActivePageNote(null)}
+            onRemoveFriendRef={handleRemoveFriendRef}
+          />,
+          document.body
+        )}
     </>
   );
 }
