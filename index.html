@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Documentation Hub — iPlusFlow Engineering & Projects</title>
+  <meta name="description"
+    content="Central documentation portal for Vivek Vohra's open-source systems, Chrome extensions, deep learning architectures, and cloud services." />
+
+  <link rel="icon" href="iplusflow/icons/icon48.png" type="image/png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cuprum:ital,wght@0,400..700;1,400..700&family=Roboto+Mono:wght@400;600&family=Source+Sans+3:ital,wght@0,300..900;1,300..900&display=swap"
+    rel="stylesheet">
+
+  <style>
+    :root {
+      --brand-blue: #003399;
+      --brand-blue-light: #2563eb;
+      --cf-header-bg: #3b5998;
+      --cf-header-dark: #253e71;
+      --cf-border: #cbd5e1;
+      --cf-border-light: #e2e8f0;
+      --cf-bg-page: #f8fafc;
+      --cf-bg-card: #ffffff;
+      --radius-md: 8px;
+      --shadow-soft: 0 4px 12px rgba(0, 0, 0, 0.05);
+      --shadow-hover: 0 8px 24px rgba(0, 51, 153, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Source Sans 3', system-ui, -apple-system, sans-serif;
+      background-color: var(--cf-bg-page);
+      color: #1e293b;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* APP HEADER */
+    .app-header-wrapper {
+      background: linear-gradient(135deg, var(--cf-header-dark) 0%, var(--cf-header-bg) 100%);
+      color: #ffffff;
+      border-bottom: 3px solid var(--brand-blue);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+
+    .app-top-bar {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .app-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: #ffffff;
+    }
+
+    .app-brand-title {
+      font-family: 'Cuprum', sans-serif;
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    .app-brand-badge {
+      background: rgba(255, 255, 255, 0.18);
+      font-size: 11.5px;
+      padding: 3px 9px;
+      border-radius: 12px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+    }
+
+    .nav-links a {
+      color: #ffffff;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+      opacity: 0.9;
+      transition: opacity 0.2s;
+    }
+
+    .nav-links a:hover {
+      opacity: 1;
+      text-decoration: underline;
+    }
+
+    /* HERO SECTION */
+    .hero-section {
+      background: #ffffff;
+      border-bottom: 1px solid var(--cf-border-light);
+      padding: 48px 20px;
+      text-align: center;
+    }
+
+    .hero-container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .hero-title {
+      font-family: 'Cuprum', sans-serif;
+      font-size: 38px;
+      color: var(--brand-blue);
+      margin-bottom: 12px;
+      font-weight: 700;
+    }
+
+    .hero-subtitle {
+      font-size: 17px;
+      color: #475569;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    .search-box {
+      max-width: 500px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 12px 18px;
+      font-size: 15px;
+      border: 2px solid var(--cf-border);
+      border-radius: var(--radius-md);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .search-box input:focus {
+      border-color: var(--brand-blue-light);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    }
+
+    /* MAIN CONTAINER & GRID */
+    .main-content {
+      max-width: 1100px;
+      margin: 40px auto;
+      padding: 0 20px;
+      flex: 1;
+    }
+
+    .section-heading {
+      font-size: 20px;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .project-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 24px;
+    }
+
+    /* PROJECT CARDS */
+    .project-card {
+      background: var(--cf-bg-card);
+      border: 1px solid var(--cf-border-light);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      box-shadow: var(--shadow-soft);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+      position: relative;
+    }
+
+    .project-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-hover);
+      border-color: var(--brand-blue-light);
+    }
+
+    .card-badge {
+      align-self: flex-start;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 4px;
+      margin-bottom: 14px;
+      letter-spacing: 0.5px;
+    }
+
+    .badge-extension {
+      background: #e0e7ff;
+      color: #3730a3;
+    }
+
+    .badge-dl {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .badge-upcoming {
+      background: #f1f5f9;
+      color: #64748b;
+    }
+
+    .card-title {
+      font-family: 'Cuprum', sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--brand-blue);
+      margin-bottom: 8px;
+    }
+
+    .card-description {
+      font-size: 14.5px;
+      color: #475569;
+      line-height: 1.55;
+      margin-bottom: 20px;
+    }
+
+    .card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 20px;
+    }
+
+    .tag {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 11.5px;
+      background: #f1f5f9;
+      color: #334155;
+      padding: 2px 7px;
+      border-radius: 4px;
+      border: 1px solid #e2e8f0;
+    }
+
+    .card-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 700;
+      font-size: 14.5px;
+      color: var(--cf-link-blue);
+      text-decoration: none;
+      margin-top: auto;
+    }
+
+    .card-link:hover {
+      color: var(--brand-blue);
+      text-decoration: underline;
+    }
+
+    /* FOOTER */
+    .app-footer {
+      background: #ffffff;
+      border-top: 1px solid var(--cf-border-light);
+      padding: 24px 20px;
+      text-align: center;
+      margin-top: 60px;
+      font-size: 13.5px;
+      color: #64748b;
+    }
+
+    .app-footer a {
+      color: var(--brand-blue);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .app-footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="app-header-wrapper">
+    <div class="app-top-bar">
+      <a href="https://iplusflow.com" class="app-brand">
+        <span class="app-brand-title">iPlusFlow</span>
+        <span class="app-brand-badge">Central Technical Docs</span>
+      </a>
+      <div class="nav-links">
+        <a href="https://iplusflow.com" target="_blank">🌐 Personal Portfolio ↗</a>
+      </div>
+    </div>
+  </header>
+
+  <section class="hero-section">
+    <div class="hero-container">
+      <h1 class="hero-title">Engineering & Architecture Documentation</h1>
+      <p class="hero-subtitle">
+        System manuals, low-level design books, API references, and architecture guides for Vivek Vohra's software engineering projects.
+      </p>
+      <div class="search-box">
+        <input type="text" id="projectSearch" placeholder="🔍 Search documentation projects..." onkeyup="filterProjects()" />
+      </div>
+    </div>
+  </section>
+
+  <main class="main-content">
+    <h2 class="section-heading">📚 Available Project Documentation</h2>
+
+    <div class="project-grid" id="projectGrid">
+
+      <div class="project-card" data-title="iplusflow chrome extension codeforces react typescript shadow dom">
+        <div>
+          <span class="card-badge badge-extension">Chrome Extension</span>
+          <h3 class="card-title">iPlusFlow for Codeforces</h3>
+          <p class="card-description">
+            Comprehensive architecture book, HLD/LLD diagrams, React migration journey, Shadow DOM isolation strategy, and peer-learning algorithms.
+          </p>
+          <div class="card-tags">
+            <span class="tag">React 19</span>
+            <span class="tag">TypeScript</span>
+            <span class="tag">Shadow DOM</span>
+            <span class="tag">Chrome Extension Manifest V3</span>
+          </div>
+        </div>
+        <a href="/iplusflow/" class="card-link">Explore iPlusFlow Docs &rarr;</a>
+      </div>
+
+      <div class="project-card" data-title="eeg deep learning neural networks python brain signal processing">
+        <div>
+          <span class="card-badge badge-dl">Deep Learning</span>
+          <h3 class="card-title">EEG Signal Processing & AI</h3>
+          <p class="card-description">
+            Neural network model specs, signal preprocessing pipelines, and deployment reference for the EEG deep learning platform.
+          </p>
+          <div class="card-tags">
+            <span class="tag">Python</span>
+            <span class="tag">PyTorch / TensorFlow</span>
+            <span class="tag">REST API</span>
+            <span class="tag">AWS Cloud</span>
+          </div>
+        </div>
+        <a href="https://eeg.iplusflow.com" class="card-link">Visit EEG Project Hub &rarr;</a>
+      </div>
+
+      <div class="project-card" data-title="aws cloudfront s3 cdn devops route53 serverless">
+        <div>
+          <span class="card-badge badge-upcoming">Infrastructure</span>
+          <h3 class="card-title">AWS & DevOps Architecture</h3>
+          <p class="card-description">
+            Cloud hosting strategy, CloudFront edge-rewriting rules, S3 static asset delivery, and cost-optimization playbooks.
+          </p>
+          <div class="card-tags">
+            <span class="tag">AWS S3</span>
+            <span class="tag">CloudFront</span>
+            <span class="tag">ACM</span>
+            <span class="tag">DNS Routing</span>
+          </div>
+        </div>
+        <a href="https://iplusflow.com" target="_blank" class="card-link">View Portfolio Infrastructure &rarr;</a>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="app-footer">
+    <p><strong>iPlusFlow Knowledge Base</strong> &copy; 2026 Vivek Vohra. All rights reserved.</p>
+    <p style="margin-top:6px;">
+      Maintained on AWS CloudFront & S3 | <a href="https://github.com/vivekvohra" target="_blank">🐙 GitHub Profile</a>
+    </p>
+  </footer>
+
+  <script>
+    function filterProjects() {
+      const input = document.getElementById('projectSearch').value.toLowerCase();
+      const cards = document.querySelectorAll('.project-card');
+
+      cards.forEach(card => {
+        const title = card.getAttribute('data-title');
+        if (title.includes(input)) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+  </script>
+</body>
+
+</html>

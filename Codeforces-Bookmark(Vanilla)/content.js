@@ -1,6 +1,6 @@
 // content.js
 (async function() {
-  const MAX_FRIENDS = 10;
+  const MAX_FRIENDS = 20;
   const CACHE_DURATION = 10 * 60 * 1000; // 10 minutes in milliseconds
 
 // add after CACHE_DURATION

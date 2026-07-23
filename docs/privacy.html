@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy - iPlusFlow for Codeforces</title>
+    <link rel="icon" href="icons/icon128.png" type="image/png" />
+    
+    <!-- Codeforces & Source Sans Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cuprum:ital,wght@0,400..700;1,400..700&family=Roboto+Mono:wght@400;600&family=Source+Sans+3:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+    <!-- APP HEADER BAR -->
+    <header class="app-header-wrapper">
+        <div class="app-top-bar">
+            <a href="index.html" class="app-brand">
+                <img src="icons/icon128.png" alt="iPlusFlow Icon" class="app-brand-logo" />
+                <span class="app-brand-title">iPlusFlow</span>
+                <span class="app-brand-badge">Official Privacy Policy</span>
+            </a>
+
+            <div class="header-right-actions">
+                <a href="index.html" class="btn-header btn-header-primary">
+                    <span>🏠 Return to Architecture Manual</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN PRIVACY CONTENT -->
+    <div style="max-width: 900px; margin: 30px auto; padding: 0 18px;">
+        
+        <div class="page-hero">
+            <h1>Privacy Policy – iPlusFlow</h1>
+            <p>Official Client-First, Zero-Telemetry Privacy Policy for the iPlusFlow Chrome Extension.</p>
+        </div>
+
+        <div class="roundbox">
+            <div class="caption titled">
+                <span>→ Data Protection & Privacy Statement</span>
+                <span style="font-weight:normal; font-size:12px; color:#555;">Last Updated: June 2026</span>
+            </div>
+            <div class="roundbox-body">
+                <p>
+                    The <strong>iPlusFlow</strong> Chrome extension helps users track Codeforces problems, view friends' accepted submissions, and maintain private notes directly inside the browser interface.
+                </p>
+                <p>
+                    All data is stored locally within your browser or your private encrypted Chrome Sync storage and is <strong>never transmitted to any external servers operated by the developer</strong>.
+                </p>
+
+                <h2 style="font-size:17px; color:#003399; margin: 20px 0 10px 0;">📦 What We Store</h2>
+                <table class="datatable">
+                    <thead>
+                        <tr>
+                            <th>Data Type</th>
+                            <th>Storage Location</th>
+                            <th>Sync Enabled?</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Your Codeforces handle</td>
+                            <td>Chrome Storage Sync</td>
+                            <td>Yes (Chrome Account)</td>
+                        </tr>
+                        <tr>
+                            <td>Bookmarked problems & tags</td>
+                            <td>Chrome Storage Sync</td>
+                            <td>Yes (Chrome Account)</td>
+                        </tr>
+                        <tr>
+                            <td>Optional personal notes</td>
+                            <td>Chrome Storage Sync</td>
+                            <td>Yes (Chrome Account)</td>
+                        </tr>
+                        <tr>
+                            <td>Cached friend list & submissions</td>
+                            <td>Chrome Storage Local</td>
+                            <td>No (Device specific)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <p style="margin-top:12px;">
+                    Bookmarks, notes, and settings are stored using <code>chrome.storage.sync</code> to support syncing across browsers where you are signed into Chrome. Temporary caches are stored in <code>chrome.storage.local</code> to improve performance.
+                </p>
+
+                <h2 style="font-size:17px; color:#003399; margin: 20px 0 10px 0;">🚫 What We Do Not Do</h2>
+                <ul style="padding-left:20px; margin-bottom:15px; line-height:1.7;">
+                    <li>❌ Collect personal or sensitive data</li>
+                    <li>❌ Track your browsing activity</li>
+                    <li>❌ Use cookies or localStorage for tracking</li>
+                    <li>❌ Send your data to external servers operated by the developer</li>
+                    <li>❌ Access your passwords, login credentials, or authentication tokens</li>
+                </ul>
+
+                <h2 style="font-size:17px; color:#003399; margin: 20px 0 10px 0;">🔐 Permissions Explanation</h2>
+                <p>The extension requests the following host permission:</p>
+                <pre class="code-block">"host_permissions": ["https://codeforces.com/*"]</pre>
+                <p style="margin-top:8px;">This permission is strictly required to support core features:</p>
+                <ul style="padding-left:20px; margin-top:6px; line-height:1.7;">
+                    <li>✅ Access your public Codeforces submission history (<code class="inline-code">user.status</code> API) to identify solved problems.</li>
+                    <li>✅ Load your Codeforces friends list when logged into Codeforces.</li>
+                    <li>✅ Access problem pages and submission pages to display accepted submissions from friends when requested.</li>
+                </ul>
+
+                <h2 style="font-size:17px; color:#003399; margin: 20px 0 10px 0;">🗑️ Data Removal</h2>
+                <p>Stored data may be removed at any time by:</p>
+                <ul style="padding-left:20px; margin-top:6px; line-height:1.7;">
+                    <li>Uninstalling the extension.</li>
+                    <li>Clearing Chrome extension storage manually via browser developer settings.</li>
+                </ul>
+
+                <h2 style="font-size:17px; color:#003399; margin: 20px 0 10px 0;">📧 Developer Contact</h2>
+                <div class="cf-notice-box">
+                    For questions regarding this Privacy Policy:<br>
+                    📧 <a href="mailto:vvkvohra1102@gmail.com">vvkvohra1102@gmail.com</a><br>
+                    🐙 <a href="https://github.com/vivekvohra/iPlusFlow" target="_blank">github.com/vivekvohra/iPlusFlow</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="app-footer">
+        <p><strong>iPlusFlow for Codeforces</strong> &copy; 2026. Official Privacy Policy.</p>
+    </footer>
+
+</body>
+</html>
