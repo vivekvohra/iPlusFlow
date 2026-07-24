@@ -53,60 +53,43 @@ Watch **iPlusFlow** in action to see problem bookmarking, streak tracking, unive
 
 ## 📸 Screenshots & UI Showcase
 
-> *Add or replace screenshots in the placeholders below:*
-
-### 1. 👥 Friends' Solution Inspector
+<br>
 <p align="center">
-  <img width="850" alt="Friends' Solution Inspector" src="https://github.com/user-attachments/assets/d9ac61bb-5169-4c50-9588-62cda1ee3f9e" />
+  <img width="1280" height="800" alt="SS1" src="https://github.com/user-attachments/assets/12cda6a3-d207-4990-8564-48a0972d3eac" />
+  
   <br>
-  <i>Inspect accepted source code snippets from up to 20 friends directly on the problem page.</i>
+
 </p>
 
 <br>
-
-### 2. 📌 Problem Workspace & Bookmarks
 <p align="center">
-  <img width="850" alt="Bookmark & Sync UI" src="https://github.com/user-attachments/assets/01e58222-7921-4d12-a6aa-b75571bbe1ef" />
+  
+  <img width="1280" height="800" alt="ss2" src="https://github.com/user-attachments/assets/bcd1209a-cd6d-4ed7-ae61-2f3672c0d37c" />
+  
+  
   <br>
-  <i>Seamlessly bookmark problems, track solve status, and manage target sets.</i>
+
 </p>
 
 <br>
-
-### 3. ✍️ Universal Notes Portal
 <p align="center">
-  <img width="850" alt="Notes Editor Modal" src="https://github.com/user-attachments/assets/fe85b24d-0414-4a8c-915d-66a670196925" />
+  <img width="1280" height="800" alt="ss3" src="https://github.com/user-attachments/assets/1d18c07e-a517-4fc5-bef1-7db932be8e22" />
+
   <br>
-  <i>Write markdown hints, key observations, and solution approaches tied to specific problems.</i>
+
 </p>
 
 <br>
-
-### 4. 🏷️ Problem Tag & Rating Filtering
 <p align="center">
-  <img width="850" alt="Tag & Rating Filter System" src="https://github.com/user-attachments/assets/d6cd19c1-e5c4-4a51-9b18-4ae9200cb52a" />
+  <img width="1280" height="800" alt="ss4" src="https://github.com/user-attachments/assets/4feed89b-17e2-430f-a3bb-8dc211621974" />
+
+
   <br>
-  <i>Filter your saved problem lists by tags, difficulty ratings, or pending solve state.</i>
+
 </p>
 
-<br>
 
-### 5. 🧩 Extension Popup & Quick Dashboard
-<p align="center">
-  <img width="850" alt="Extension Popup UI" src="https://github.com/user-attachments/assets/52c12ffc-adf1-4cb1-b2b4-eefea6bfaa14" />
-  <br>
-  <i>Quick access extension popup dashboard for sync status, configuration, and notes.</i>
-</p>
 
-<!-- 
-<br>
-### 6. [NEW SCREENSHOT PLACEHOLDER]
-<p align="center">
-  <img width="850" alt="New Feature Screenshot" src="YOUR_IMAGE_URL_HERE" />
-  <br>
-  <i>Caption describing your new screenshot.</i>
-</p>
--->
 
 ---
 
